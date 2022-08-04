@@ -23,6 +23,7 @@
     "test": "vitest"
   },
   "peerDependencies": {
+    "react": ">=16",
     "value-enhancer": ">=1"
   },
   "devDependencies": {
