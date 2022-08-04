@@ -1,0 +1,56 @@
+{
+  "name": "use-value-enhancer",
+  "version": "0.1.0",
+  "description": "React hooks for value-enhancer.",
+  "author": "netless",
+  "license": "MIT",
+  "main": "./dist/use-value-enhancer.cjs.js",
+  "module": "./dist/use-value-enhancer.es.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite --host --open",
+    "start": "vite --host --open",
+    "prepublish": "pnpm run build",
+    "lint": "eslint --ext .ts,.tsx . && prettier --check .",
+    "types": "cross-env NODE_ENV=production tsc --declaration --emitDeclarationOnly --jsx react --esModuleInterop --outDir dist",
+    "build": "vite build && npm run types",
+    "build:dev": "vite build --mode development && npm run types",
+    "release": "standard-version",
+    "test": "vitest"
+  },
+  "peerDependencies": {
+    "value-enhancer": ">=1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.3",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.6.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.22",
+    "standard-version": "^9.5.0",
+    "typescript": "^4.7.3",
+    "value-enhancer": "^1.3.0",
+    "vite": "^2.9.10",
+    "vitest": "^0.18.0"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "rollup",
+        "@babel/core"
+      ]
+    }
+  }
+}
