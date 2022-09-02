@@ -4,8 +4,8 @@
   "description": "React hooks for value-enhancer.",
   "author": "netless",
   "license": "MIT",
-  "main": "./dist/use-value-enhancer.cjs.js",
-  "module": "./dist/use-value-enhancer.es.js",
+  "main": "./dist/use-value-enhancer.js",
+  "module": "./dist/use-value-enhancer.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "src",
@@ -24,7 +24,7 @@
   },
   "peerDependencies": {
     "react": ">=16",
-    "value-enhancer": ">=1"
+    "value-enhancer": "1.x"
   },
   "devDependencies": {
     "@types/node": "^18.0.3",
@@ -43,7 +43,7 @@
     "standard-version": "^9.5.0",
     "typescript": "^4.7.3",
     "value-enhancer": "^1.3.0",
-    "vite": "^2.9.10",
+    "vite": "^3.0.9",
     "vitest": "^0.18.0"
   },
   "pnpm": {
