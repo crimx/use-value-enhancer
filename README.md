@@ -13,7 +13,7 @@ npm add use-value-enhancer value-enhancer react
 ```ts
 import { useVal } from "use-value-enhancer";
 
-const value = useVal(val);
+const value = useVal(val$);
 ```
 
 ### Example
@@ -21,14 +21,15 @@ const value = useVal(val);
 ```jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Val } from "value-enhancer";
+import { val } from "value-enhancer";
 import { useVal } from "use-value-enhancer";
 
-export const App = ({ val }) => {
-  const value = useVal(val);
-  return <div>{value} World!</div>;
+export const App = ({ prefix$ }) => {
+  const prefix = useVal(prefix$);
+  return <div>{prefix} World!</div>;
 };
 
-const val = new Val("Hello");
-ReactDOM.createRoot(document.getElementById("app")).render(<App val={val} />);
+const prefix$ = val("Hello");
+ReactDOM.createRoot(document.getElementById("root"))
+  .render(<App prefix$={prefix$} />);
 ```
