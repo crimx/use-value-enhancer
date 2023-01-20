@@ -6,7 +6,7 @@ export function useVal<TValue = any>(
   eager = false
 ): TValue {
   const [value, setValue] = useState(() => val.value);
-  useEffect(() => val.subscribe(setValue, eager), [val]);
+  useEffect(() => val.subscribe(value => setValue(() => value), eager), [val]);
   return value;
 }
 
