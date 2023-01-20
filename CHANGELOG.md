@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/crimx/use-value-enhancer/compare/v2.0.1...v2.0.2) (2023-01-20)
+
+
+### Bug Fixes
+
+* support function value changes ([68842d1](https://github.com/crimx/use-value-enhancer/commit/68842d1d1d1f76e8057f463354b952c4a7d2ed57))
+
 ### [2.0.1](https://github.com/crimx/use-value-enhancer/compare/v2.0.0...v2.0.1) (2023-01-20)
 
 
