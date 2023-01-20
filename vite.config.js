@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     test: {
+      environment: "jsdom",
       include: ["test/**/*.test.ts"],
     },
     build: {
