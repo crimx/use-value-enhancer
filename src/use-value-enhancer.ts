@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ReadonlyVal } from "value-enhancer";
 
+const increase = (updateId: number): number => (updateId + 1) % 4294967296;
+
+/**
+ * @param val A val of value
+ * @param eager Trigger subscription callback synchronously
+ * @returns the value
+ */
 export function useVal<TValue = any>(
   val: ReadonlyVal<TValue>,
   eager = false
@@ -10,17 +17,12 @@ export function useVal<TValue = any>(
   // Only access value getter when updateId changes to avoid frequent getter calls
   const value = useMemo(() => val.value, [updateId]);
   useEffect(() => {
-    let isFirst = true;
-    return val.subscribe(newValue => {
-      if (isFirst) {
-        isFirst = false;
-        // useEffect is called asynchronously so we need to check again
-        if (val.compare(newValue, value)) {
-          return;
-        }
-      }
-      updater(updateId => (updateId + 1) % 4294967296);
-    }, eager);
+    const rerender = () => updater(increase);
+    if (!val.compare(val.value, value)) {
+      // useEffect is called asynchronously so we need to check again
+      rerender();
+    }
+    return val.reaction(rerender, eager);
   }, [val]);
   return value;
 }

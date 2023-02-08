@@ -89,4 +89,21 @@ describe("useVal", () => {
 
     expect(renderingCount).toBe(2);
   });
+
+  it("should trigger extra rendering if value changes before initial rendering", async () => {
+    const val$ = val(1);
+    let renderingCount = 0;
+    const { result } = renderHook(() => {
+      renderingCount += 1;
+      const value = useVal(val$, true);
+      val$.set(2);
+      return value;
+    });
+
+    expect(result.current).toBe(2);
+
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(renderingCount).toBe(2);
+  });
 });
