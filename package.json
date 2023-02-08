@@ -14,7 +14,7 @@
   "scripts": {
     "dev": "vite --host --open",
     "start": "vite --host --open",
-    "prepublish": "pnpm run build",
+    "prepublishOnly": "pnpm run build",
     "lint": "eslint --ext .ts,.tsx . && prettier --check .",
     "types": "cross-env NODE_ENV=production tsc --declaration --emitDeclarationOnly --jsx react --esModuleInterop --outDir dist",
     "build": "vite build && npm run types",
