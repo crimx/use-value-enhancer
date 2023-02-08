@@ -48,11 +48,21 @@ describe("useVal", () => {
       return useVal(val$);
     });
 
+    await act(async () => val$.set(1));
+    await act(async () => val$.set(1));
+    await act(async () => val$.set(1));
+
     expect(result.current).toBe(1);
 
     await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(renderingCount).toBe(1);
+
+    await act(async () => val$.set(2));
+
+    expect(result.current).toBe(2);
+
+    expect(renderingCount).toBe(2);
   });
 
   it("should not trigger extra rendering on same value", async () => {
@@ -72,5 +82,11 @@ describe("useVal", () => {
     await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(renderingCount).toBe(1);
+
+    await act(async () => val$.set({ a: 2 }));
+
+    expect(result.current).toEqual({ a: 2 });
+
+    expect(renderingCount).toBe(2);
   });
 });
