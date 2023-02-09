@@ -11,6 +11,12 @@ describe("useVal", () => {
     expect(result.current).toBe(1);
   });
 
+  it("should return undefined if no val provided", () => {
+    const { result } = renderHook(() => useVal());
+
+    expect(result.current).toBeUndefined();
+  });
+
   it("should update after value changes", async () => {
     const val$ = val("a");
     const { result } = renderHook(() => useVal(val$));
