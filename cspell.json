@@ -6,6 +6,7 @@
     "lcov",
     "pnpm",
     "preinstall",
+    "reactjs",
     "replayable",
     "typedoc",
     "vite",
