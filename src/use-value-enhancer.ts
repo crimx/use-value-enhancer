@@ -3,19 +3,27 @@ import type { ReadonlyVal } from "value-enhancer";
 
 const increase = (updateId: number): number => (updateId + 1) % 4294967296;
 
-export function useVal(): undefined;
 /**
  * @param val A val of value
- * @param eager Trigger subscription callback synchronously
+ * @param eager Trigger subscription callback synchronously. Default true.
  * @returns the value
  */
 export function useVal<TValue = any>(
   val: ReadonlyVal<TValue>,
   eager?: boolean
 ): TValue;
+/**
+ * @param val A val of value
+ * @param eager Trigger subscription callback synchronously. Default true.
+ * @returns the value, or undefined if val is undefined
+ */
 export function useVal<TValue = any>(
   val?: ReadonlyVal<TValue>,
-  eager = false
+  eager?: boolean
+): TValue | undefined;
+export function useVal<TValue = any>(
+  val?: ReadonlyVal<TValue>,
+  eager = true
 ): TValue | undefined {
   // val could have custom compare function, so we need to use a state to trigger re-rendering
   const [updateId, updater] = useState(0);
