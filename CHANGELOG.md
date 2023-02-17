@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.8](https://github.com/crimx/use-value-enhancer/compare/v2.0.7...v2.0.8) (2023-02-17)
+
+
+### Bug Fixes
+
+* default eager and let React handle async collection ([c2b271b](https://github.com/crimx/use-value-enhancer/commit/c2b271ba647ca16ebbb5245b7094083f97c698cf))
+
 ### [2.0.7](https://github.com/crimx/use-value-enhancer/compare/v2.0.6...v2.0.7) (2023-02-14)
 
 ### [2.0.6](https://github.com/crimx/use-value-enhancer/compare/v2.0.5...v2.0.6) (2023-02-09)
