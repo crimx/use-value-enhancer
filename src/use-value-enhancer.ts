@@ -23,7 +23,7 @@ export function useVal<TValue = any>(
 ): TValue | undefined;
 export function useVal<TValue = any>(
   val?: ReadonlyVal<TValue>,
-  eager = true
+  eager?: boolean
 ): TValue | undefined {
   // val could have custom compare function, so we need to use a state to trigger re-rendering
   const [updateId, updater] = useState(0);
