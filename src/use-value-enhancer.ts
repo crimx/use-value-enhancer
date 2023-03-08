@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useDebugValue, useEffect, useMemo, useState } from "react";
 import type { ReadonlyVal } from "value-enhancer";
 
 const increase = (updateId: number): number => (updateId + 1) | 0;
@@ -27,8 +27,10 @@ export function useVal<TValue = any>(
 ): TValue | undefined {
   // val could have custom compare function, so we need to use a state to trigger re-rendering
   const [updateId, updater] = useState(0);
+
   // Only access value getter when updateId changes to avoid frequent getter calls
   const value = useMemo(() => val && val.value, [updateId]);
+
   useEffect(() => {
     if (val) {
       const rerender = () => updater(increase);
@@ -39,6 +41,9 @@ export function useVal<TValue = any>(
       return val.reaction(rerender, eager);
     }
   }, [val, eager]);
+
+  useDebugValue(value);
+
   return value;
 }
 
