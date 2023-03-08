@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ReadonlyVal } from "value-enhancer";
 
-const increase = (updateId: number): number => (updateId + 1) % 4294967296;
+const increase = (updateId: number): number => (updateId + 1) | 0;
 
 /**
  * @param val A val of value
