@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/crimx/use-value-enhancer/compare/v2.0.10...v2.1.0) (2023-04-02)
+
+
+### Features
+
+* add useDerived ([3bc69e2](https://github.com/crimx/use-value-enhancer/commit/3bc69e24dbb48dba49dabc602d0f7eb40ae9daf5))
+
 ### [2.0.10](https://github.com/crimx/use-value-enhancer/compare/v2.0.9...v2.0.10) (2023-03-08)
 
 ### [2.0.9](https://github.com/crimx/use-value-enhancer/compare/v2.0.8...v2.0.9) (2023-03-03)
