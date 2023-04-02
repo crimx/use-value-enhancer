@@ -4,8 +4,11 @@ import type { ReadonlyVal } from "value-enhancer";
 const increase = (updateId: number): number => (updateId + 1) | 0;
 
 /**
+ * Accepts a val from anywhere and returns the latest value.
+ * It only triggers re-rendering when new value emitted from val (base on `val.compare` not `Object.is` comparison from React `useState`).
+ *
  * @param val A val of value
- * @param eager Trigger subscription callback synchronously. Default true.
+ * @param eager Trigger subscription callback synchronously. Default false.
  * @returns the value
  */
 export function useVal<TValue = any>(
@@ -13,8 +16,11 @@ export function useVal<TValue = any>(
   eager?: boolean
 ): TValue;
 /**
+ * Accepts a val from anywhere and returns the latest value.
+ * It only triggers re-rendering when new value emitted from val (base on `val.compare` not `Object.is` comparison from React `useState`).
+ *
  * @param val A val of value
- * @param eager Trigger subscription callback synchronously. Default true.
+ * @param eager Trigger subscription callback synchronously. Default false.
  * @returns the value, or undefined if val is undefined
  */
 export function useVal<TValue = any>(

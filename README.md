@@ -15,13 +15,19 @@
 
 React hooks for [value-enhancer](https://github.com/crimx/value-enhancer).
 
-### Install
+## Install
 
 ```bash
 npm add use-value-enhancer value-enhancer react
 ```
 
-### Usage
+## Usage
+
+### useVal
+
+`useVal` accepts a val from anywhere and returns the latest value.
+
+It only triggers re-rendering when new value emitted from val (base on `val.compare` not `Object.is` comparison from React `useState`).
 
 ```ts
 import { useVal } from "use-value-enhancer";
@@ -32,18 +38,50 @@ const value = useVal(val$);
 ### Example
 
 ```jsx
-import React from "react";
+import React, { createContext, useContext } from "react";
 import ReactDOM from "react-dom/client";
 import { val } from "value-enhancer";
 import { useVal } from "use-value-enhancer";
 
-export const App = ({ prefix$ }) => {
-  const prefix = useVal(prefix$);
-  return <div>{prefix} World!</div>;
+const valFromProps$ = val("Props");
+const valFromContext$ = val("Context");
+const valFromExternal = val("External");
+
+const ValContext = createContext(valFromContext$);
+
+export const App = ({ valFromProps$ }) => {
+  const valFromProps = useVal(valFromProps$);
+
+  const valFromContext$ = useContext(ValContext);
+  const valFromContext = useVal(valFromContext$);
+
+  const valFromExternal = useVal(valFromExternal$);
+
+  return (
+    <>
+      <p>
+        {valFromProps}, {valFromContext}, {valFromExternal}
+      </p>
+      <p>Props, Context, External</p>
+    </>
+  );
 };
 
-const prefix$ = val("Hello");
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <App prefix$={prefix$} />
+  <ValContext.Provider value={valFromContext$}>
+    <App valFromProps$={valFromProps$} />
+  </ValContext.Provider>
 );
+```
+
+### useDerived
+
+`useDerived` accepts a val from anywhere and returns the latest derived value.
+
+Re-rendering is triggered when the derived value changes (`Object.is` comparison from React `useState`).
+
+```ts
+import { useDerived } from "use-value-enhancer";
+
+const value = useDerived(val$, value => Number(value));
 ```
