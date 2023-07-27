@@ -1,4 +1,8 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 devDependencies:
   '@testing-library/react':
@@ -59,8 +63,8 @@ devDependencies:
     specifier: ^4.7.3
     version: 4.7.3
   value-enhancer:
-    specifier: ^2.4.3
-    version: 2.4.3
+    specifier: ^3.0.1
+    version: 3.0.1
   vite:
     specifier: ^3.0.9
     version: 3.0.9
@@ -3354,8 +3358,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /value-enhancer@2.4.3:
-    resolution: {integrity: sha512-RtCE3qL1P5z03dkFK3ok1v1ItMspW9OHSdPmS+ATJ76Ot1HVo9LvOSqpIxpM8hpwMX6VV/+c0Tid73quTh6J4A==}
+  /value-enhancer@3.0.1:
+    resolution: {integrity: sha512-a62OdQyqMdqEexFB9WhIZJxNAyXc0Cp+rSI2upmlnxQ6I2mnqhEpdjLZkIL84mFAXPjQL1KVzMmDXPhmFFr+1A==}
     dev: true
 
   /vite@3.0.9:

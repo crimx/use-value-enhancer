@@ -44,11 +44,7 @@ export function useDerived<TSrcValue = any, TValue = any>(
   });
 
   useEffect(
-    () =>
-      val &&
-      val.subscribe(value => {
-        setResult(() => transformRef.current(value));
-      }),
+    () => val?.subscribe(value => setResult(() => transformRef.current(value))),
     [val, eager]
   );
 

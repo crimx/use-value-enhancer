@@ -1,7 +1,7 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { val } from "value-enhancer";
-import { useVal, useValueEnhancer } from "../src/index";
+import { useVal } from "../src/index";
 
 describe("useVal", () => {
   it("should get value from val", () => {
@@ -40,10 +40,6 @@ describe("useVal", () => {
 
     expect(result.current).toBe(val$.value);
     expect(result.current).not.toBe(fn);
-  });
-
-  it("should export useValueEnhancer alias", () => {
-    expect(useValueEnhancer).toBe(useVal);
   });
 
   it("should not trigger extra rendering on initial value", async () => {
