@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -63,8 +63,8 @@ devDependencies:
     specifier: ^4.7.3
     version: 4.7.3
   value-enhancer:
-    specifier: ^3.0.2
-    version: 3.0.2
+    specifier: ^3.0.5
+    version: 3.0.5
   vite:
     specifier: ^3.0.9
     version: 3.0.9
@@ -3358,8 +3358,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /value-enhancer@3.0.2:
-    resolution: {integrity: sha512-5CgRai8X8Jl81NGDm0VrCvn4dzg9noltvPyTAZoZQRfLTNW/mv/giqxXCvI91RLuQ6N4Y20IsakMs/6KUTBSEw==}
+  /value-enhancer@3.0.5:
+    resolution: {integrity: sha512-0p45SEuGqCK+/YPoufeXCGvVw84+/V96mB6krkvNQDDGW8jLFI/Pn1kcPWmz21EvoCfx2+B66cRs2kdbuOJ2OQ==}
     dev: true
 
   /vite@3.0.9:
