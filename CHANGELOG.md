@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/crimx/use-value-enhancer/compare/v3.0.1...v4.0.0) (2023-12-21)
+
 ### [3.0.1](https://github.com/crimx/use-value-enhancer/compare/v3.0.0...v3.0.1) (2023-08-20)
 
 ## [3.0.0](https://github.com/crimx/use-value-enhancer/compare/v2.1.1...v3.0.0) (2023-07-27)
