@@ -68,7 +68,7 @@ describe("useVal", () => {
   });
 
   it("should not trigger extra rendering on same value", async () => {
-    const val$ = val({ a: 1 }, { compare: (a, b) => a.a === b.a });
+    const val$ = val({ a: 1 }, { equal: (a, b) => a.a === b.a });
     let renderingCount = 0;
     const { result } = renderHook(() => {
       renderingCount += 1;
