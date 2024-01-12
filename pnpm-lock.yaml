@@ -63,8 +63,8 @@ devDependencies:
     specifier: ^4.7.3
     version: 4.9.5
   value-enhancer:
-    specifier: ^4.0.0
-    version: 4.0.0
+    specifier: ^4.1.1
+    version: 4.1.1
   vite:
     specifier: ^3.0.9
     version: 3.2.7(@types/node@18.16.12)
@@ -3298,8 +3298,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /value-enhancer@4.0.0:
-    resolution: {integrity: sha512-li17sukPM75Ian+QsQt5UJXPNgP1ZWTSkl8FI9NXrKldic7x+ctbQ0fZgG7q38fPjsKGYghKWVsL8I29NHu4Qg==}
+  /value-enhancer@4.1.1:
+    resolution: {integrity: sha512-1Ph00E18xd34DQOpRMqni4zkC+Xgn9prsoORr8r+1L/YaUmNRbvjfW3fXSf4mgdCGNiLR9mjYcCb1NB8uwgoUQ==}
     dev: true
 
   /vite@3.2.7(@types/node@18.16.12):

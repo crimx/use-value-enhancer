@@ -1,19 +1,23 @@
-import type { ReadonlyVal, DerivedValTransform } from "value-enhancer";
+import {
+  type ReadonlyVal,
+  type DerivedValTransform,
+  isVal,
+} from "value-enhancer";
 
-import { useEffect, useRef, useState } from "react";
+import { useDebugValue, useEffect, useRef, useState } from "react";
 import { useIsomorphicLayoutEffect } from "./utils";
 
 /**
  * Accepts a val from anywhere and returns the latest derived value.
  * Re-rendering is triggered when the derived value changes (`Object.is` comparison from React `useState`).
  *
- * @param val A val of value
+ * @param val$ A val of value
  * @param transform A pure function that takes an input value and returns a new value.
  * @param eager Trigger subscription callback synchronously. Default false.
  * @returns the derived value
  */
 export function useDerived<TSrcValue = any, TValue = any>(
-  val: ReadonlyVal<TSrcValue>,
+  val$: ReadonlyVal<TSrcValue>,
   transform: DerivedValTransform<TSrcValue, TValue>,
   eager?: boolean
 ): TValue;
@@ -27,26 +31,47 @@ export function useDerived<TSrcValue = any, TValue = any>(
  * @returns the derived value, or undefined if val is undefined
  */
 export function useDerived<TSrcValue = any, TValue = any>(
-  val: ReadonlyVal<TSrcValue> | undefined,
+  val$: ReadonlyVal<TSrcValue> | undefined,
   transform: DerivedValTransform<TSrcValue, TValue>,
   eager?: boolean
 ): TValue | undefined;
 export function useDerived<TSrcValue = any, TValue = any>(
-  val: ReadonlyVal<TSrcValue> | undefined,
+  val$: ReadonlyVal<TSrcValue> | undefined,
   transform: DerivedValTransform<TSrcValue, TValue>,
   eager?: boolean
 ): TValue | undefined {
-  const [result, setResult] = useState(() => val && transform(val.value));
+  const [value, setValue] = useState(() =>
+    isVal(val$) ? transform(val$.value) : void 0
+  );
   const transformRef = useRef(transform);
+  const currentSrcValue = val$?.value;
+  const lastSrcValueRef = useRef(currentSrcValue);
 
   useIsomorphicLayoutEffect(() => {
+    // keep track of the latest `transform` before entering
+    // `useEffect` stage to avoid stale value due to async update
     transformRef.current = transform;
-  });
+  }, [transform]);
 
-  useEffect(
-    () => val?.subscribe(value => setResult(() => transformRef.current(value))),
-    [val, eager]
-  );
+  useIsomorphicLayoutEffect(() => {
+    // track last src value after value is set
+    lastSrcValueRef.current = currentSrcValue;
+  }, [value]);
 
-  return result;
+  useEffect(() => {
+    if (val$) {
+      const valuePairUpdater = () => transformRef.current(val$.value);
+      // check stale value due to async update
+      if (val$.value !== lastSrcValueRef.current) {
+        setValue(valuePairUpdater);
+      }
+      return val$.reaction(() => setValue(valuePairUpdater), eager);
+    } else {
+      setValue(void 0);
+    }
+  }, [val$, eager]);
+
+  useDebugValue(value);
+
+  return value;
 }

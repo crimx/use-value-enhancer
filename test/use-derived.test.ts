@@ -100,12 +100,12 @@ describe("useDerived", () => {
     let renderingCount = 0;
     const { result } = renderHook(() => {
       renderingCount += 1;
-      const value = useDerived(val$, value => value + 1, true);
+      const value = useDerived(val$, value => ({ value: value + 1 }), true);
       val$.set(2);
       return value;
     });
 
-    expect(result.current).toBe(3);
+    expect(result.current).toEqual({ value: 3 });
 
     await new Promise(resolve => setTimeout(resolve, 0));
 

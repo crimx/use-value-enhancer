@@ -27,12 +27,100 @@ npm add use-value-enhancer value-enhancer react
 
 `useVal` accepts a val from anywhere and returns the latest value.
 
-It only triggers re-rendering when new value emitted from val (base on `val.compare` not `Object.is` comparison from React `useState`).
+It only triggers re-rendering when new value emitted from val (base on val ` equal`` not  `Object.is`comparison from React`useState`).
 
-```ts
+```tsx
+import { val } from "value-enhancer";
 import { useVal } from "use-value-enhancer";
 
-const value = useVal(val$);
+const val$ = val("value");
+
+function Component({ val$ }) {
+  const value = useVal(val$);
+  return <p>{value}</p>;
+}
+```
+
+### useDerived
+
+`useDerived` accepts a val from anywhere and returns the latest derived value.
+
+Re-rendering is triggered when the derived value changes (`Object.is` comparison from React `useState`).
+
+```tsx
+import { val } from "value-enhancer";
+import { useDerived } from "use-value-enhancer";
+
+const val$ = val("1");
+
+function Component({ val$ }) {
+  const derived = useDerived(val$, value => Number(value));
+  return <p>{derived}</p>;
+}
+```
+
+### useFlatten
+
+`useFlatten` accepts a val from anywhere and returns the latest value from the flatten val.
+
+Re-rendering is triggered when the flatten value changes (`Object.is` comparison from React `useState`).
+
+```tsx
+import { val } from "value-enhancer";
+import { useFlatten } from "use-value-enhancer";
+
+const val$ = val(val("1"));
+
+function Component({ val$ }) {
+  const value = useDerived(val$); // "1"
+  return <p>{value}</p>;
+}
+```
+
+```tsx
+import { val } from "value-enhancer";
+import { ReactiveMap } from "value-enhancer/collections";
+import { useFlatten } from "use-value-enhancer";
+
+const map = new ReactiveMap();
+map.set("a", val("1"));
+
+function Component({ map }) {
+  const value = useDerived(map.$, map => map.get("a")); // "1"
+  return <p>{value}</p>;
+}
+```
+
+### useKeys
+
+`useKeys` accepts a reactive collection and returns the latest keys as array.
+
+```tsx
+import { ReactiveMap } from "value-enhancer/collections";
+import { useKeys } from "use-value-enhancer";
+
+const map = new ReactiveMap();
+
+function Component({ map }) {
+  const keys = useKeys(map);
+  return keys.map(key => <p key={key}>{key}</p>);
+}
+```
+
+### useValues
+
+`useValues` accepts a reactive collection and returns the latest values as array.
+
+```tsx
+import { ReactiveSet } from "value-enhancer/collections";
+import { useValues } from "use-value-enhancer";
+
+const set = new ReactiveSet();
+
+function Component({ set }) {
+  const values = useValues(set);
+  return values.map(value => <p key={String(value)}>{value}</p>);
+}
 ```
 
 ### Example
@@ -72,16 +160,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <App valFromProps$={valFromProps$} />
   </ValContext.Provider>
 );
-```
-
-### useDerived
-
-`useDerived` accepts a val from anywhere and returns the latest derived value.
-
-Re-rendering is triggered when the derived value changes (`Object.is` comparison from React `useState`).
-
-```ts
-import { useDerived } from "use-value-enhancer";
-
-const value = useDerived(val$, value => Number(value));
 ```
