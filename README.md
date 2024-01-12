@@ -72,7 +72,7 @@ import { useFlatten } from "use-value-enhancer";
 const val$ = val(val("1"));
 
 function Component({ val$ }) {
-  const value = useDerived(val$); // "1"
+  const value = useFlatten(val$); // "1"
   return <p>{value}</p>;
 }
 ```
@@ -86,7 +86,7 @@ const map = new ReactiveMap();
 map.set("a", val("1"));
 
 function Component({ map }) {
-  const value = useDerived(map.$, map => map.get("a")); // "1"
+  const value = useFlatten(map.$, map => map.get("a")); // "1"
   return <p>{value}</p>;
 }
 ```
