@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/crimx/use-value-enhancer/compare/v4.0.0...v4.1.0) (2024-01-12)
+
+
+### Features
+
+* **hooks:** add use-flatten, use-keys, use-values ([8a3e762](https://github.com/crimx/use-value-enhancer/commit/8a3e76219561e6d18ef03827f4940bfdd96329b4))
+
 ## [4.0.0](https://github.com/crimx/use-value-enhancer/compare/v3.0.1...v4.0.0) (2023-12-21)
 
 ### [3.0.1](https://github.com/crimx/use-value-enhancer/compare/v3.0.0...v3.0.1) (2023-08-20)
