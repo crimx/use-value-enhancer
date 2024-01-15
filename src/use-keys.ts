@@ -4,7 +4,7 @@ import type {
   ReactiveSet,
 } from "value-enhancer/collections";
 import { useDerived } from "./use-derived";
-import type { ReadonlyVal } from "value-enhancer";
+import { isVal, type ReadonlyVal } from "value-enhancer";
 import { getKeys } from "./utils";
 
 /**
@@ -17,42 +17,48 @@ export function useKeys<TValue = unknown>(): TValue[] | undefined;
  * @param set ReactiveSet
  * @returns keys as array from ReactiveSet.
  */
-export function useKeys<TValue>(set: ReactiveSet<TValue>): TValue[];
+export function useKeys<TValue>(
+  set: ReactiveSet<TValue> | ReadonlyVal<ReactiveSet<TValue>>
+): TValue[];
 /**
  * Get keys as array from ReactiveSet.
  * @param set ReactiveSet
  * @returns keys as array from ReactiveSet, or undefined if no set provided.
  */
 export function useKeys<TValue>(
-  set?: ReactiveSet<TValue>
+  set?: ReactiveSet<TValue> | ReadonlyVal<ReactiveSet<TValue>>
 ): TValue[] | undefined;
 /**
  * Get keys as array from ReactiveList.
  * @param list ReactiveList
  * @returns keys as array from ReactiveList.
  */
-export function useKeys<TValue>(list: ReactiveList<TValue>): number[];
+export function useKeys<TValue>(
+  list: ReactiveList<TValue> | ReadonlyVal<ReadonlyArray<TValue>>
+): number[];
 /**
  * Get keys as array from ReactiveList.
  * @param list ReactiveList
  * @returns keys as array from ReactiveList, or undefined if no list provided.
  */
 export function useKeys<TValue>(
-  list?: ReactiveList<TValue>
+  list?: ReactiveList<TValue> | ReadonlyVal<ReadonlyArray<TValue>>
 ): number[] | undefined;
 /**
  * Get keys as array from ReactiveMap.
  * @param map ReactiveMap
  * @returns keys as array from ReactiveMap.
  */
-export function useKeys<TKey, TValue>(map: ReactiveMap<TKey, TValue>): TKey[];
+export function useKeys<TKey, TValue>(
+  map: ReactiveMap<TKey, TValue> | ReadonlyVal<ReactiveMap<TKey, TValue>>
+): TKey[];
 /**
  * Get keys as array from ReactiveMap.
  * @param map ReactiveMap
  * @returns keys as array from ReactiveMap, or undefined if no map provided.
  */
 export function useKeys<TKey, TValue>(
-  map?: ReactiveMap<TKey, TValue>
+  map?: ReactiveMap<TKey, TValue> | ReadonlyVal<ReactiveMap<TKey, TValue>>
 ): TKey[] | undefined;
 /**
  * Get keys as array from reactive collection.
@@ -60,7 +66,13 @@ export function useKeys<TKey, TValue>(
  * @returns keys as array from the reactive collection.
  */
 export function useKeys<TKey, TValue>(
-  col: ReactiveMap<TKey, TValue> | ReactiveSet<TKey> | ReactiveList<TValue>
+  col:
+    | ReactiveMap<TKey, TValue>
+    | ReactiveSet<TKey>
+    | ReactiveList<TValue>
+    | ReadonlyVal<ReactiveMap<TKey, TValue>>
+    | ReadonlyVal<ReactiveSet<TKey>>
+    | ReadonlyVal<ReadonlyArray<TValue>>
 ): (TKey | number)[];
 /**
  * Get keys as array from reactive collection.
@@ -68,13 +80,25 @@ export function useKeys<TKey, TValue>(
  * @returns keys as array from the reactive collection, or undefined if no collection provided.
  */
 export function useKeys<TKey, TValue>(
-  col?: ReactiveMap<TKey, TValue> | ReactiveSet<TKey> | ReactiveList<TValue>
+  col?:
+    | ReactiveMap<TKey, TValue>
+    | ReactiveSet<TKey>
+    | ReactiveList<TValue>
+    | ReadonlyVal<ReactiveMap<TKey, TValue>>
+    | ReadonlyVal<ReactiveSet<TKey>>
+    | ReadonlyVal<ReadonlyArray<TValue>>
 ): (TKey | number)[] | undefined;
 export function useKeys<TKey, TValue>(
-  col?: ReactiveMap<TKey, TValue> | ReactiveSet<TKey> | ReactiveList<TValue>
+  col?:
+    | ReactiveMap<TKey, TValue>
+    | ReactiveSet<TKey>
+    | ReactiveList<TValue>
+    | ReadonlyVal<ReactiveMap<TKey, TValue>>
+    | ReadonlyVal<ReactiveSet<TKey>>
+    | ReadonlyVal<ReadonlyArray<TValue>>
 ): (TKey | number)[] | undefined {
   return useDerived(
-    col?.$ as ReadonlyVal<
+    (isVal(col) ? col : col?.$) as ReadonlyVal<
       ReactiveMap<TKey, TValue> | ReactiveSet<TKey> | ReadonlyArray<TValue>
     >,
     getKeys

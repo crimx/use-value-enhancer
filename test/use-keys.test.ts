@@ -21,6 +21,19 @@ describe("useKeys", () => {
     expect(result.current).toEqual(["a", "b", "c"]);
   });
 
+  it("should get keys from ReadonlyVal<ReactiveMap>", () => {
+    const map = new ReactiveMap(
+      Object.entries({
+        a: 1,
+        b: 2,
+        c: 3,
+      })
+    );
+    const { result } = renderHook(() => useKeys(map.$));
+
+    expect(result.current).toEqual(["a", "b", "c"]);
+  });
+
   it("should get keys from ReactiveSet", () => {
     const set = new ReactiveSet(["a", "b", "c"]);
     const { result } = renderHook(() => useKeys(set));
@@ -28,9 +41,23 @@ describe("useKeys", () => {
     expect(result.current).toEqual(["a", "b", "c"]);
   });
 
+  it("should get keys from ReadonlyVal<ReactiveSet>", () => {
+    const set = new ReactiveSet(["a", "b", "c"]);
+    const { result } = renderHook(() => useKeys(set.$));
+
+    expect(result.current).toEqual(["a", "b", "c"]);
+  });
+
   it("should get keys from ReactiveList", () => {
     const list = new ReactiveList(["a", "b", "c"]);
     const { result } = renderHook(() => useKeys(list));
+
+    expect(result.current).toEqual([0, 1, 2]);
+  });
+
+  it("should get keys from ReadonlyVal<ReadonlyArray>", () => {
+    const list = new ReactiveList(["a", "b", "c"]);
+    const { result } = renderHook(() => useKeys(list.$));
 
     expect(result.current).toEqual([0, 1, 2]);
   });
