@@ -66,8 +66,8 @@ export function useFlatten<TSrcValue = any, TValOrValue = any>(
     }
   );
   const getRef = useRef(get);
-  const currentSrcValue = val$?.value;
-  const lastSrcValueRef = useRef(currentSrcValue);
+  // track last src value after value is set
+  const lastSrcValueRef = useRef(val$?.value);
   const forceUpdate = useForceUpdate();
 
   useIsomorphicLayoutEffect(() => {
@@ -76,14 +76,11 @@ export function useFlatten<TSrcValue = any, TValOrValue = any>(
     getRef.current = get;
   }, [get]);
 
-  useIsomorphicLayoutEffect(() => {
-    // track last src value after value is set
-    lastSrcValueRef.current = currentSrcValue;
-  }, [value]);
-
   useEffect(() => {
     if (val$) {
-      const innerVal$ = flatten(val$, value => getRef.current(value));
+      const innerVal$ = flatten(val$, value =>
+        getRef.current((lastSrcValueRef.current = value))
+      );
 
       // check stale value due to async update
       if (val$.value !== lastSrcValueRef.current) {
@@ -96,7 +93,7 @@ export function useFlatten<TSrcValue = any, TValOrValue = any>(
         forceUpdate();
       }, eager);
     } else {
-      setValue(void 0);
+      setValue((lastSrcValueRef.current = void 0));
     }
   }, [val$, eager]);
 

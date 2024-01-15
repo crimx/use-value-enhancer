@@ -44,8 +44,8 @@ export function useDerived<TSrcValue = any, TValue = any>(
     isVal(val$) ? transform(val$.value) : void 0
   );
   const transformRef = useRef(transform);
-  const currentSrcValue = val$?.value;
-  const lastSrcValueRef = useRef(currentSrcValue);
+  // track last src value after value is set
+  const lastSrcValueRef = useRef(val$?.value);
 
   useIsomorphicLayoutEffect(() => {
     // keep track of the latest `transform` before entering
@@ -53,21 +53,17 @@ export function useDerived<TSrcValue = any, TValue = any>(
     transformRef.current = transform;
   }, [transform]);
 
-  useIsomorphicLayoutEffect(() => {
-    // track last src value after value is set
-    lastSrcValueRef.current = currentSrcValue;
-  }, [value]);
-
   useEffect(() => {
     if (val$) {
-      const valuePairUpdater = () => transformRef.current(val$.value);
+      const valuePairUpdater = () =>
+        transformRef.current((lastSrcValueRef.current = val$.value));
       // check stale value due to async update
       if (val$.value !== lastSrcValueRef.current) {
         setValue(valuePairUpdater);
       }
       return val$.reaction(() => setValue(valuePairUpdater), eager);
     } else {
-      setValue(void 0);
+      setValue((lastSrcValueRef.current = void 0));
     }
   }, [val$, eager]);
 
