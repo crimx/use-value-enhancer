@@ -1,7 +1,8 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import { val } from "value-enhancer";
+import { describe, it, expect, vi } from "vitest";
+import { derive, val, nextTick } from "value-enhancer";
 import { useVal } from "../src/index";
+import { ReactiveMap } from "value-enhancer/collections";
 
 describe("useVal", () => {
   it("should get value from val", () => {
@@ -107,5 +108,43 @@ describe("useVal", () => {
     await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(renderingCount).toBe(2);
+  });
+
+  it("should trigger transform only twice", async () => {
+    const reactiveMap = new ReactiveMap<string, number>();
+    reactiveMap.set("foo", 1);
+
+    const mockTransform = vi.fn(
+      (map: ReactiveMap<string, number>) => new Set(map.values())
+    );
+    const derived$ = derive(reactiveMap.$, mockTransform);
+
+    await nextTick();
+
+    expect(mockTransform).toHaveBeenCalledTimes(0);
+
+    renderHook(() => useVal(derived$));
+
+    renderHook(() => useVal(derived$));
+
+    const spy1 = vi.fn();
+    derived$.subscribe(spy1);
+
+    await nextTick();
+
+    const spy2 = vi.fn();
+    derived$.subscribe(spy2);
+
+    await nextTick();
+
+    const spy3 = vi.fn();
+    derived$.subscribe(spy3);
+
+    await nextTick();
+
+    expect(mockTransform).toHaveBeenCalledTimes(2);
+
+    derived$.dispose();
+    reactiveMap.dispose();
   });
 });

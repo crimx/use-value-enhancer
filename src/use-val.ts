@@ -36,15 +36,19 @@ export function useVal<TValue = any>(
 
   useEffect(() => {
     if (val$) {
-      // check stale value due to async update
-      if (val$.value !== value) {
-        setValue(val$.get);
-      }
-      return val$.reaction(() => {
+      // first subscribe to trigger derive dirty cache
+      const disposer = val$.reaction(() => {
         setValue(val$.get);
         // re-rendering is triggered based on val reaction not from React `useState`
         forceUpdate();
       }, eager);
+
+      // check stale value due to async update
+      if (!Object.is(val$.value, value)) {
+        setValue(val$.get);
+      }
+
+      return disposer;
     } else {
       setValue(void 0);
     }

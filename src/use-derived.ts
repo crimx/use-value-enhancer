@@ -55,13 +55,20 @@ export function useDerived<TSrcValue = any, TValue = any>(
 
   useEffect(() => {
     if (val$) {
+      const initialSrcValue = lastSrcValueRef.current;
+
       const valuePairUpdater = () =>
         transformRef.current((lastSrcValueRef.current = val$.value));
+
+      // first subscribe to trigger derive dirty cache
+      const disposer = val$.reaction(() => setValue(valuePairUpdater), eager);
+
       // check stale value due to async update
-      if (val$.value !== lastSrcValueRef.current) {
+      if (!Object.is(val$.value, initialSrcValue)) {
         setValue(valuePairUpdater);
       }
-      return val$.reaction(() => setValue(valuePairUpdater), eager);
+
+      return disposer;
     } else {
       setValue((lastSrcValueRef.current = void 0));
     }
