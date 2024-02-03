@@ -1,106 +1,33 @@
-import type {
-  ReactiveList,
-  ReactiveMap,
-  ReactiveSet,
-} from "value-enhancer/collections";
 import { useDerived } from "./use-derived";
 import { isVal, type ReadonlyVal } from "value-enhancer";
+import type { ColWithKeys } from "./utils";
 import { getKeys } from "./utils";
+
+type MaybeColWithKeys$<TValue> =
+  | ReadonlyVal<ColWithKeys<TValue>>
+  | { $: ReadonlyVal<ColWithKeys<TValue>> };
 
 /**
  * Get keys as array from reactive collection.
- * @returns keys as array from the reactive collection, or undefined if no collection provided.
+ * @returns Keys as array from the reactive collection, or undefined if no collection provided.
  */
-export function useKeys<TValue = unknown>(): TValue[] | undefined;
+export function useKeys<TKey = unknown>(): TKey[] | undefined;
 /**
- * Get keys as array from ReactiveSet.
- * @param set ReactiveSet
- * @returns keys as array from ReactiveSet.
+ * Get keys as array from reactive collection.
+ * @param col A Reactive Collection or a ReadonlyVal of Collection.
+ * @returns Keys as array from the reactive collection.
  */
-export function useKeys<TValue>(
-  set: ReactiveSet<TValue> | ReadonlyVal<ReactiveSet<TValue>>
-): TValue[];
+export function useKeys<TKey>(col: MaybeColWithKeys$<TKey>): TKey[];
 /**
- * Get keys as array from ReactiveSet.
- * @param set ReactiveSet
- * @returns keys as array from ReactiveSet, or undefined if no set provided.
+ * Get keys as array from reactive collection.
+ * @param col An optional Reactive Collection or a ReadonlyVal of Collection.
+ * @returns Keys as array from the reactive collection, or undefined if no collection provided.
  */
-export function useKeys<TValue>(
-  set?: ReactiveSet<TValue> | ReadonlyVal<ReactiveSet<TValue>>
-): TValue[] | undefined;
-/**
- * Get keys as array from ReactiveList.
- * @param list ReactiveList
- * @returns keys as array from ReactiveList.
- */
-export function useKeys<TValue>(
-  list: ReactiveList<TValue> | ReadonlyVal<ReadonlyArray<TValue>>
-): number[];
-/**
- * Get keys as array from ReactiveList.
- * @param list ReactiveList
- * @returns keys as array from ReactiveList, or undefined if no list provided.
- */
-export function useKeys<TValue>(
-  list?: ReactiveList<TValue> | ReadonlyVal<ReadonlyArray<TValue>>
-): number[] | undefined;
-/**
- * Get keys as array from ReactiveMap.
- * @param map ReactiveMap
- * @returns keys as array from ReactiveMap.
- */
-export function useKeys<TKey, TValue>(
-  map: ReactiveMap<TKey, TValue> | ReadonlyVal<ReactiveMap<TKey, TValue>>
-): TKey[];
-/**
- * Get keys as array from ReactiveMap.
- * @param map ReactiveMap
- * @returns keys as array from ReactiveMap, or undefined if no map provided.
- */
-export function useKeys<TKey, TValue>(
-  map?: ReactiveMap<TKey, TValue> | ReadonlyVal<ReactiveMap<TKey, TValue>>
+export function useKeys<TKey>(
+  col?: MaybeColWithKeys$<TKey>
 ): TKey[] | undefined;
-/**
- * Get keys as array from reactive collection.
- * @param col ReactiveMap | ReactiveSet | ReactiveList
- * @returns keys as array from the reactive collection.
- */
-export function useKeys<TKey, TValue>(
-  col:
-    | ReactiveMap<TKey, TValue>
-    | ReactiveSet<TKey>
-    | ReactiveList<TValue>
-    | ReadonlyVal<ReactiveMap<TKey, TValue>>
-    | ReadonlyVal<ReactiveSet<TKey>>
-    | ReadonlyVal<ReadonlyArray<TValue>>
-): (TKey | number)[];
-/**
- * Get keys as array from reactive collection.
- * @param col ReactiveMap | ReactiveSet | ReactiveList
- * @returns keys as array from the reactive collection, or undefined if no collection provided.
- */
-export function useKeys<TKey, TValue>(
-  col?:
-    | ReactiveMap<TKey, TValue>
-    | ReactiveSet<TKey>
-    | ReactiveList<TValue>
-    | ReadonlyVal<ReactiveMap<TKey, TValue>>
-    | ReadonlyVal<ReactiveSet<TKey>>
-    | ReadonlyVal<ReadonlyArray<TValue>>
-): (TKey | number)[] | undefined;
-export function useKeys<TKey, TValue>(
-  col?:
-    | ReactiveMap<TKey, TValue>
-    | ReactiveSet<TKey>
-    | ReactiveList<TValue>
-    | ReadonlyVal<ReactiveMap<TKey, TValue>>
-    | ReadonlyVal<ReactiveSet<TKey>>
-    | ReadonlyVal<ReadonlyArray<TValue>>
-): (TKey | number)[] | undefined {
-  return useDerived(
-    (isVal(col) ? col : col?.$) as ReadonlyVal<
-      ReactiveMap<TKey, TValue> | ReactiveSet<TKey> | ReadonlyArray<TValue>
-    >,
-    getKeys
-  );
+export function useKeys<TKey>(
+  col?: MaybeColWithKeys$<TKey>
+): TKey[] | undefined {
+  return useDerived(isVal(col) ? col : col?.$, getKeys);
 }

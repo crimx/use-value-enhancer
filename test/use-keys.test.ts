@@ -6,6 +6,7 @@ import {
   ReactiveMap,
   ReactiveSet,
 } from "value-enhancer/collections";
+import { val } from "value-enhancer";
 
 describe("useKeys", () => {
   it("should get keys from ReactiveMap", () => {
@@ -46,6 +47,48 @@ describe("useKeys", () => {
     const { result } = renderHook(() => useKeys(set.$));
 
     expect(result.current).toEqual(["a", "b", "c"]);
+  });
+
+  it("should get keys from ReadonlyVal<Array | May | Set>", async () => {
+    const arr$ = val(["a", "b", "c"]);
+    const set$ = val(new Set(["a", "b", "c"]));
+    const map$ = val(
+      new Map([
+        ["a", 1],
+        ["b", 2],
+        ["c", 3],
+      ])
+    );
+
+    const { result } = renderHook(() => ({
+      arr: useKeys(arr$),
+      set: useKeys(set$),
+      map: useKeys(map$),
+    }));
+
+    expect(result.current).toEqual({
+      arr: [0, 1, 2],
+      set: ["a", "b", "c"],
+      map: ["a", "b", "c"],
+    });
+
+    await act(async () => {
+      arr$.set(["d", "e", "f"]);
+      set$.set(new Set(["d", "e", "f"]));
+      map$.set(
+        new Map([
+          ["d", 4],
+          ["e", 5],
+          ["f", 6],
+        ])
+      );
+    });
+
+    expect(result.current).toEqual({
+      arr: [0, 1, 2],
+      set: ["d", "e", "f"],
+      map: ["d", "e", "f"],
+    });
   });
 
   it("should get keys from ReactiveList", () => {

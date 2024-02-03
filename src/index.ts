@@ -3,3 +3,4 @@ export * from "./use-derived";
 export * from "./use-flatten";
 export * from "./use-keys";
 export * from "./use-values";
+export * from "./use-entries";

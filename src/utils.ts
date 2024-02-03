@@ -11,10 +11,22 @@ export const useForceUpdate = (): (() => void) => {
   return () => setState(increment);
 };
 
-export const getKeys = <TKey, TValue>(
-  col: Map<TKey, TValue> | Set<TKey> | ReadonlyArray<TValue>
-): (number | TKey)[] => [...col.keys()];
+export type ColWithKeys<TKey> = { keys(): Iterable<TKey> };
 
-export const getValues = <TKey, TValue>(
-  col: Map<TKey, TValue> | Set<TValue> | ReadonlyArray<TValue>
-): TValue[] => [...col.values()];
+export const getKeys = <TKey>(col: ColWithKeys<TKey>): TKey[] => [
+  ...col.keys(),
+];
+
+export type ColWithValues<TValue> = { values(): Iterable<TValue> };
+
+export const getValues = <TValue>(col: ColWithValues<TValue>): TValue[] => [
+  ...col.values(),
+];
+
+export type ColWithEntries<TKey, TValue> = {
+  entries(): Iterable<[TKey, TValue]>;
+};
+
+export const getEntries = <TKey, TValue>(
+  col: ColWithEntries<TKey, TValue>
+): [TKey, TValue][] => [...col.entries()];
