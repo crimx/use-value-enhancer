@@ -1,6 +1,6 @@
-import type { ReadonlyVal } from "value-enhancer";
+import { strictEqual, type ReadonlyVal } from "value-enhancer";
 
-import { useDebugValue, useEffect, useState } from "react";
+import { useDebugValue, useEffect, useRef, useState } from "react";
 import { useForceUpdate } from "./utils";
 
 /**
@@ -32,24 +32,31 @@ export function useVal<TValue = any>(
   eager?: boolean
 ): TValue | undefined {
   const [value, setValue] = useState(val$ ? val$.get : void 0);
+  const lastVersionRef = useRef(val$?.$version);
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
     if (val$) {
+      const valueSetter = () => {
+        lastVersionRef.current = val$.$version;
+        return val$.get();
+      };
+
       // first subscribe to trigger derive dirty cache
       const disposer = val$.reaction(() => {
-        setValue(val$.get);
+        setValue(valueSetter);
         // re-rendering is triggered based on val reaction not from React `useState`
         forceUpdate();
       }, eager);
 
       // check stale value due to async update
-      if (!Object.is(val$.value, value)) {
-        setValue(val$.get);
+      if (!strictEqual(val$.$version, lastVersionRef.current)) {
+        setValue(valueSetter);
       }
 
       return disposer;
     } else {
+      lastVersionRef.current = Symbol();
       setValue(void 0);
     }
   }, [val$, eager]);

@@ -1,6 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { val } from "value-enhancer";
+import { nextTick, val } from "value-enhancer";
 import { useDerived } from "../src/index";
 
 describe("useDerived", () => {
@@ -59,7 +59,7 @@ describe("useDerived", () => {
 
     expect(result.current).toBe(2);
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(1);
 
@@ -67,6 +67,30 @@ describe("useDerived", () => {
 
     expect(result.current).toBe(3);
 
+    expect(renderingCount).toBe(2);
+  });
+
+  it("should ignore comparing if equal is false", async () => {
+    const val$ = val(1);
+    let renderingCount = 0;
+    const { result } = renderHook(() => {
+      renderingCount += 1;
+      const value = useDerived(val$, () => ({ value: "value" }), {
+        equal: false,
+      });
+      return value;
+    });
+
+    await nextTick();
+
+    expect(result.current).toEqual({ value: "value" });
+    expect(renderingCount).toBe(1);
+
+    await act(async () => val$.set(2));
+
+    await nextTick();
+
+    expect(result.current).toEqual({ value: "value" });
     expect(renderingCount).toBe(2);
   });
 
@@ -84,7 +108,7 @@ describe("useDerived", () => {
 
     expect(result.current).toBe(1);
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(1);
 
@@ -105,10 +129,9 @@ describe("useDerived", () => {
       return value;
     });
 
+    await nextTick();
+
     expect(result.current).toEqual({ value: 3 });
-
-    await new Promise(resolve => setTimeout(resolve, 0));
-
     expect(renderingCount).toBe(2);
   });
 });

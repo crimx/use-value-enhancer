@@ -6,7 +6,7 @@ import {
   ReactiveMap,
   ReactiveSet,
 } from "value-enhancer/collections";
-import { val } from "value-enhancer";
+import { nextTick, val } from "value-enhancer";
 
 describe("useEntries", () => {
   it("should get entries from ReactiveMap", () => {
@@ -203,7 +203,7 @@ describe("useEntries", () => {
 
     expect(renderingCount).toBe(1);
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(1);
   });

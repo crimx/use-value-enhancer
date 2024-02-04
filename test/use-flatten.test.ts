@@ -1,7 +1,7 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import type { Val } from "value-enhancer";
-import { val } from "value-enhancer";
+import { nextTick, val } from "value-enhancer";
 import { ReactiveMap } from "value-enhancer/collections";
 import { useFlatten } from "../src/index";
 
@@ -82,7 +82,7 @@ describe("useFlatten", () => {
 
     expect(result.current).toBe(1);
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(1);
 
@@ -107,7 +107,7 @@ describe("useFlatten", () => {
 
     expect(result.current).toBe(1);
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(1);
 
@@ -130,7 +130,7 @@ describe("useFlatten", () => {
 
     expect(result.current).toEqual(2);
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(2);
   });

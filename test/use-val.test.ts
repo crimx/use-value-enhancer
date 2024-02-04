@@ -57,7 +57,7 @@ describe("useVal", () => {
 
     expect(result.current).toBe(1);
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(1);
 
@@ -82,7 +82,7 @@ describe("useVal", () => {
 
     expect(result.current).toEqual({ a: 1 });
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(1);
 
@@ -105,12 +105,12 @@ describe("useVal", () => {
 
     expect(result.current).toBe(2);
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(2);
   });
 
-  it("should trigger transform only twice", async () => {
+  it("should trigger transform only once", async () => {
     const reactiveMap = new ReactiveMap<string, number>();
     reactiveMap.set("foo", 1);
 
@@ -142,7 +142,7 @@ describe("useVal", () => {
 
     await nextTick();
 
-    expect(mockTransform).toHaveBeenCalledTimes(2);
+    expect(mockTransform).toHaveBeenCalledTimes(1);
 
     derived$.dispose();
     reactiveMap.dispose();

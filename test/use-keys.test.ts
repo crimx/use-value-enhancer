@@ -1,12 +1,12 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { useKeys } from "../src/index";
 import {
   ReactiveList,
   ReactiveMap,
   ReactiveSet,
 } from "value-enhancer/collections";
-import { val } from "value-enhancer";
+import { nextTick, val } from "value-enhancer";
 
 describe("useKeys", () => {
   it("should get keys from ReactiveMap", () => {
@@ -138,8 +138,33 @@ describe("useKeys", () => {
 
     expect(renderingCount).toBe(1);
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
 
     expect(renderingCount).toBe(1);
+  });
+
+  it("should not trigger extra rendering if keys not changed", async () => {
+    const map = new ReactiveMap(
+      Object.entries({
+        a: 1,
+        b: 2,
+        c: 3,
+      })
+    );
+    const renderCount = vi.fn();
+    const { result } = renderHook(() => {
+      renderCount();
+      return useKeys(map);
+    });
+
+    expect(result.current).toEqual(["a", "b", "c"]);
+    expect(renderCount).toHaveBeenCalledTimes(1);
+
+    renderCount.mockClear();
+
+    await act(async () => map.set("a", 3));
+
+    expect(result.current).toEqual(["a", "b", "c"]);
+    expect(renderCount).toHaveBeenCalledTimes(0);
   });
 });
