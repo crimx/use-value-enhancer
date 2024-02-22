@@ -2,7 +2,8 @@ import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { derive, val, nextTick } from "value-enhancer";
 import { useVal } from "../src/index";
-import { ReactiveMap } from "value-enhancer/collections";
+import type { ReactiveMap } from "value-enhancer/collections";
+import { reactiveMap } from "value-enhancer/collections";
 
 describe("useVal", () => {
   it("should get value from val", () => {
@@ -111,13 +112,13 @@ describe("useVal", () => {
   });
 
   it("should trigger transform only once", async () => {
-    const reactiveMap = new ReactiveMap<string, number>();
-    reactiveMap.set("foo", 1);
+    const map = reactiveMap<string, number>();
+    map.set("foo", 1);
 
     const mockTransform = vi.fn(
       (map: ReactiveMap<string, number>) => new Set(map.values())
     );
-    const derived$ = derive(reactiveMap.$, mockTransform);
+    const derived$ = derive(map.$, mockTransform);
 
     await nextTick();
 
@@ -145,6 +146,6 @@ describe("useVal", () => {
     expect(mockTransform).toHaveBeenCalledTimes(1);
 
     derived$.dispose();
-    reactiveMap.dispose();
+    map.dispose();
   });
 });

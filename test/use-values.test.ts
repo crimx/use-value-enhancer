@@ -2,15 +2,15 @@ import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { useValues } from "../src/index";
 import {
-  ReactiveList,
-  ReactiveMap,
-  ReactiveSet,
+  reactiveList,
+  reactiveMap,
+  reactiveSet,
 } from "value-enhancer/collections";
 import { nextTick, val } from "value-enhancer";
 
 describe("useValues", () => {
   it("should get values from ReactiveMap", () => {
-    const map = new ReactiveMap(
+    const map = reactiveMap(
       Object.entries({
         a: 1,
         b: 2,
@@ -23,7 +23,7 @@ describe("useValues", () => {
   });
 
   it("should get values from ReadonlyVal<ReactiveMap>", () => {
-    const map = new ReactiveMap(
+    const map = reactiveMap(
       Object.entries({
         a: 1,
         b: 2,
@@ -36,28 +36,28 @@ describe("useValues", () => {
   });
 
   it("should get values from ReactiveSet", () => {
-    const set = new ReactiveSet(["a", "b", "c"]);
+    const set = reactiveSet(["a", "b", "c"]);
     const { result } = renderHook(() => useValues(set));
 
     expect(result.current).toEqual(["a", "b", "c"]);
   });
 
   it("should get values from ReadonlyVal<ReactiveSet>", () => {
-    const set = new ReactiveSet(["a", "b", "c"]);
+    const set = reactiveSet(["a", "b", "c"]);
     const { result } = renderHook(() => useValues(set.$));
 
     expect(result.current).toEqual(["a", "b", "c"]);
   });
 
   it("should get values from ReactiveList", () => {
-    const list = new ReactiveList(["a", "b", "c"]);
+    const list = reactiveList(["a", "b", "c"]);
     const { result } = renderHook(() => useValues(list));
 
     expect(result.current).toEqual(["a", "b", "c"]);
   });
 
   it("should get values from ReadonlyVal<ReadonlyArray>", () => {
-    const list = new ReactiveList(["a", "b", "c"]);
+    const list = reactiveList(["a", "b", "c"]);
     const { result } = renderHook(() => useValues(list.$));
 
     expect(result.current).toEqual(["a", "b", "c"]);
@@ -112,7 +112,7 @@ describe("useValues", () => {
   });
 
   it("should update after value changes", async () => {
-    const list = new ReactiveList(["a", "b", "c"]);
+    const list = reactiveList(["a", "b", "c"]);
     const { result } = renderHook(() => useValues(list));
 
     expect(result.current).toEqual(["a", "b", "c"]);
@@ -127,7 +127,7 @@ describe("useValues", () => {
   });
 
   it("should not trigger extra rendering on initial value", async () => {
-    const set = new ReactiveSet(["a", "b", "c"]);
+    const set = reactiveSet(["a", "b", "c"]);
     let renderingCount = 0;
     const { result } = renderHook(() => {
       renderingCount += 1;

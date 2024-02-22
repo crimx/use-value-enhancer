@@ -79,10 +79,10 @@ function Component({ val$ }) {
 
 ```tsx
 import { val } from "value-enhancer";
-import { ReactiveMap } from "value-enhancer/collections";
+import { reactiveMap } from "value-enhancer/collections";
 import { useFlatten } from "use-value-enhancer";
 
-const map = new ReactiveMap();
+const map = reactiveMap();
 map.set("a", val("1"));
 
 function Component({ map }) {
@@ -96,10 +96,10 @@ function Component({ map }) {
 `useKeys` accepts a reactive collection and returns the latest keys as array.
 
 ```tsx
-import { ReactiveMap } from "value-enhancer/collections";
+import { reactiveMap } from "value-enhancer/collections";
 import { useKeys } from "use-value-enhancer";
 
-const map = new ReactiveMap();
+const map = reactiveMap();
 
 function Component({ map }) {
   const keys = useKeys(map);
@@ -112,10 +112,10 @@ function Component({ map }) {
 `useValues` accepts a reactive collection and returns the latest values as array.
 
 ```tsx
-import { ReactiveSet } from "value-enhancer/collections";
+import { reactiveSet } from "value-enhancer/collections";
 import { useValues } from "use-value-enhancer";
 
-const set = new ReactiveSet();
+const set = reactiveSet();
 
 function Component({ set }) {
   const values = useValues(set);

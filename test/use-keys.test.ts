@@ -2,15 +2,15 @@ import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { useKeys } from "../src/index";
 import {
-  ReactiveList,
-  ReactiveMap,
-  ReactiveSet,
+  reactiveList,
+  reactiveMap,
+  reactiveSet,
 } from "value-enhancer/collections";
 import { nextTick, val } from "value-enhancer";
 
 describe("useKeys", () => {
   it("should get keys from ReactiveMap", () => {
-    const map = new ReactiveMap(
+    const map = reactiveMap(
       Object.entries({
         a: 1,
         b: 2,
@@ -23,7 +23,7 @@ describe("useKeys", () => {
   });
 
   it("should get keys from ReadonlyVal<ReactiveMap>", () => {
-    const map = new ReactiveMap(
+    const map = reactiveMap(
       Object.entries({
         a: 1,
         b: 2,
@@ -36,14 +36,14 @@ describe("useKeys", () => {
   });
 
   it("should get keys from ReactiveSet", () => {
-    const set = new ReactiveSet(["a", "b", "c"]);
+    const set = reactiveSet(["a", "b", "c"]);
     const { result } = renderHook(() => useKeys(set));
 
     expect(result.current).toEqual(["a", "b", "c"]);
   });
 
   it("should get keys from ReadonlyVal<ReactiveSet>", () => {
-    const set = new ReactiveSet(["a", "b", "c"]);
+    const set = reactiveSet(["a", "b", "c"]);
     const { result } = renderHook(() => useKeys(set.$));
 
     expect(result.current).toEqual(["a", "b", "c"]);
@@ -92,14 +92,14 @@ describe("useKeys", () => {
   });
 
   it("should get keys from ReactiveList", () => {
-    const list = new ReactiveList(["a", "b", "c"]);
+    const list = reactiveList(["a", "b", "c"]);
     const { result } = renderHook(() => useKeys(list));
 
     expect(result.current).toEqual([0, 1, 2]);
   });
 
   it("should get keys from ReadonlyVal<ReadonlyArray>", () => {
-    const list = new ReactiveList(["a", "b", "c"]);
+    const list = reactiveList(["a", "b", "c"]);
     const { result } = renderHook(() => useKeys(list.$));
 
     expect(result.current).toEqual([0, 1, 2]);
@@ -112,7 +112,7 @@ describe("useKeys", () => {
   });
 
   it("should update after key changes", async () => {
-    const list = new ReactiveList(["a", "b", "c"]);
+    const list = reactiveList(["a", "b", "c"]);
     const { result } = renderHook(() => useKeys(list));
 
     expect(result.current).toEqual([0, 1, 2]);
@@ -127,7 +127,7 @@ describe("useKeys", () => {
   });
 
   it("should not trigger extra rendering on initial value", async () => {
-    const set = new ReactiveSet(["a", "b", "c"]);
+    const set = reactiveSet(["a", "b", "c"]);
     let renderingCount = 0;
     const { result } = renderHook(() => {
       renderingCount += 1;
@@ -144,7 +144,7 @@ describe("useKeys", () => {
   });
 
   it("should not trigger extra rendering if keys not changed", async () => {
-    const map = new ReactiveMap(
+    const map = reactiveMap(
       Object.entries({
         a: 1,
         b: 2,

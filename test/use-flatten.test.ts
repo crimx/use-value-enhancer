@@ -2,7 +2,7 @@ import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import type { Val } from "value-enhancer";
 import { nextTick, val } from "value-enhancer";
-import { ReactiveMap } from "value-enhancer/collections";
+import { reactiveMap } from "value-enhancer/collections";
 import { useFlatten } from "../src/index";
 
 describe("useFlatten", () => {
@@ -15,7 +15,7 @@ describe("useFlatten", () => {
 
   it("should get flatten value from picked val", async () => {
     const renderCount = vi.fn();
-    const map = new ReactiveMap<string, Val<number>>();
+    const map = reactiveMap<string, Val<number>>();
     map.set("a", val(1));
     const { result } = renderHook(() => {
       renderCount();

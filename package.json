@@ -30,7 +30,7 @@
     "dev": "vite --host --open",
     "start": "vite --host --open",
     "prepublishOnly": "pnpm run build",
-    "lint": "eslint --ext .ts,.tsx . && prettier --check .",
+    "lint": "eslint --ext .ts,.tsx . && prettier --check . && tsc --noEmit",
     "types": "cross-env NODE_ENV=production tsc --declaration --emitDeclarationOnly --jsx react --esModuleInterop --outDir dist",
     "build": "vite build && npm run types",
     "build:dev": "vite build --mode development && npm run types",
@@ -39,7 +39,7 @@
   },
   "peerDependencies": {
     "react": ">=16",
-    "value-enhancer": ">=4.3.1 <5"
+    "value-enhancer": "5"
   },
   "devDependencies": {
     "@testing-library/react": "^13.4.0",
@@ -61,7 +61,7 @@
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.22",
     "standard-version": "^9.5.0",
     "typescript": "^4.7.3",
-    "value-enhancer": "^4.3.2",
+    "value-enhancer": "^5.0.0",
     "vite": "^3.0.9",
     "vitest": "^0.18.0"
   },
