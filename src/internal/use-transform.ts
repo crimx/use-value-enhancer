@@ -16,7 +16,7 @@ export function useTransformValInternal<
   ) => ReadonlyVal<TTarget>,
   val$?: ReadonlyVal<TSrcValue>,
   get = identity as (value: TSrcValue) => TGetResult,
-  eagerOrConfig?: boolean | ValConfig<TTarget>
+  eagerOrConfig: boolean | ValConfig<TTarget> = true
 ): TTarget | undefined {
   let equal: ValConfig<TTarget>["equal"];
   let eager: ValConfig<TTarget>["eager"];

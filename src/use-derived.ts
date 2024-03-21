@@ -13,7 +13,7 @@ import { useTransformValInternal } from "./internal/use-transform";
  *
  * @param val$ A val of value
  * @param transform A pure function that takes an input value and returns a new value.
- * @param eagerOrConfig `ValConfig` of Val or just the `eager`.
+ * @param eagerOrConfig `ValConfig` of Val or just the `eager`. Default `true`.
  * @returns the derived value
  */
 export function useDerived<TSrcValue = any, TValue = any>(
@@ -27,7 +27,7 @@ export function useDerived<TSrcValue = any, TValue = any>(
  *
  * @param val A val of value
  * @param transform A pure function that takes an input value and returns a new value.
- * @param eagerOrConfig `ValConfig` of Val or just the `eager`.
+ * @param eagerOrConfig `ValConfig` of Val or just the `eager`. Default `true`.
  * @returns the derived value, or undefined if val is undefined
  */
 export function useDerived<TSrcValue = any, TValue = any>(

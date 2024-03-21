@@ -29,7 +29,7 @@ export function useFlatten<TValOrValue = any>(
  *
  * @param val$ A val of val.
  * @param get A pure function that gets the inner from `val$`.
- * @param eagerOrConfig `ValConfig` of Val or just the `eager`.
+ * @param eagerOrConfig `ValConfig` of Val or just the `eager`. Default `true`.
  * @returns the value of the flatten val.
  */
 export function useFlatten<TSrcValue = any, TValOrValue = any>(
@@ -43,7 +43,7 @@ export function useFlatten<TSrcValue = any, TValOrValue = any>(
  *
  * @param val$ A val of val.
  * @param get A pure function that gets the inner from `val$`.
- * @param eagerOrConfig `ValConfig` of Val or just the `eager`.
+ * @param eagerOrConfig `ValConfig` of Val or just the `eager`. Default `true`.
  * @returns the value of the flatten `val$`, or undefined if val is undefined.
  */
 export function useFlatten<TSrcValue = any, TValOrValue = any>(

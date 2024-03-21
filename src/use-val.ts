@@ -8,7 +8,7 @@ import { useForceUpdate } from "./utils";
  * It only triggers re-rendering when new value emitted from val (base on val `equal` not `Object.is` comparison from React `useState`).
  *
  * @param val$ A val of value
- * @param eager Trigger subscription callback synchronously. Default false.
+ * @param eager Trigger subscription callback synchronously. Default true.
  * @returns the value
  */
 export function useVal<TValue = any>(
@@ -20,7 +20,7 @@ export function useVal<TValue = any>(
  * It only triggers re-rendering when new value emitted from val (base on val `equal` not `Object.is` comparison from React `useState`).
  *
  * @param val$ A val of value
- * @param eager Trigger subscription callback synchronously. Default false.
+ * @param eager Trigger subscription callback synchronously. Default true.
  * @returns the value, or undefined if val is undefined
  */
 export function useVal<TValue = any>(
@@ -29,7 +29,7 @@ export function useVal<TValue = any>(
 ): TValue | undefined;
 export function useVal<TValue = any>(
   val$?: ReadonlyVal<TValue>,
-  eager?: boolean
+  eager = true
 ): TValue | undefined {
   const [value, setValue] = useState(val$ ? val$.get : void 0);
   const lastVersionRef = useRef(val$?.$version);
