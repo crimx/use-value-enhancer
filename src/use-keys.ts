@@ -1,4 +1,5 @@
 import { useDerived } from "./use-derived";
+import type { ValConfig } from "value-enhancer";
 import { isVal, type ReadonlyVal, arrayShallowEqual } from "value-enhancer";
 import type { ColWithKeys } from "./utils";
 import { getKeys } from "./utils";
@@ -19,17 +20,22 @@ export function useKeys<TKey = unknown>(): TKey[] | undefined;
  * @param col A Reactive Collection or a ReadonlyVal of Collection.
  * @returns Keys as array from the reactive collection.
  */
-export function useKeys<TKey>(col: MaybeColWithKeys$<TKey>): TKey[];
+export function useKeys<TKey>(
+  col: MaybeColWithKeys$<TKey>,
+  eagerOrConfig?: boolean | ValConfig<TKey[]>
+): TKey[];
 /**
  * Get keys as array from reactive collection.
  * @param col An optional Reactive Collection or a ReadonlyVal of Collection.
  * @returns Keys as array from the reactive collection, or undefined if no collection provided.
  */
 export function useKeys<TKey>(
-  col?: MaybeColWithKeys$<TKey>
+  col?: MaybeColWithKeys$<TKey>,
+  eagerOrConfig?: boolean | ValConfig<TKey[]>
 ): TKey[] | undefined;
 export function useKeys<TKey>(
-  col?: MaybeColWithKeys$<TKey>
+  col?: MaybeColWithKeys$<TKey>,
+  eagerOrConfig: boolean | ValConfig<TKey[]> = KEY_CONFIG
 ): TKey[] | undefined {
-  return useDerived(isVal(col) ? col : col?.$, getKeys, KEY_CONFIG);
+  return useDerived(isVal(col) ? col : col?.$, getKeys, eagerOrConfig);
 }

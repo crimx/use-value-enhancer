@@ -1,4 +1,5 @@
 import { useDerived } from "./use-derived";
+import type { ValConfig } from "value-enhancer";
 import { isVal, type ReadonlyVal } from "value-enhancer";
 import type { ColWithEntries } from "./utils";
 import { getEntries } from "./utils";
@@ -20,7 +21,8 @@ export function useEntries<TKey = unknown, TValue = unknown>():
  * @returns Entries as array from the reactive collection.
  */
 export function useEntries<TKey, TValue>(
-  col: MaybeColWithEntries$<TKey, TValue>
+  col: MaybeColWithEntries$<TKey, TValue>,
+  eagerOrConfig?: boolean | ValConfig<[TKey, TValue][]>
 ): [TKey, TValue][];
 /**
  * Get entries as array from reactive collection.
@@ -28,10 +30,12 @@ export function useEntries<TKey, TValue>(
  * @returns Entries as array from the reactive collection, or undefined if no collection provided.
  */
 export function useEntries<TKey, TValue>(
-  col?: MaybeColWithEntries$<TKey, TValue>
+  col?: MaybeColWithEntries$<TKey, TValue>,
+  eagerOrConfig?: boolean | ValConfig<[TKey, TValue][]>
 ): [TKey, TValue][] | undefined;
 export function useEntries<TKey, TValue>(
-  col?: MaybeColWithEntries$<TKey, TValue>
+  col?: MaybeColWithEntries$<TKey, TValue>,
+  eagerOrConfig?: boolean | ValConfig<[TKey, TValue][]>
 ): [TKey, TValue][] | undefined {
-  return useDerived(isVal(col) ? col : col?.$, getEntries);
+  return useDerived(isVal(col) ? col : col?.$, getEntries, eagerOrConfig);
 }
