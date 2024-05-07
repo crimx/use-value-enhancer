@@ -1,6 +1,11 @@
 import { type ReadonlyVal } from "value-enhancer";
 
-import { useDebugValue, useEffect, useState } from "react";
+import { useCallback, useDebugValue } from "react";
+import { useSyncExternalStore } from "use-sync-external-store";
+
+type Subscriber = Parameters<typeof useSyncExternalStore>[0];
+
+const noop = () => void 0;
 
 /**
  * Accepts a val from anywhere and returns the latest value.
@@ -30,22 +35,23 @@ export function useVal<TValue = any>(
   val$?: ReadonlyVal<TValue>,
   eager = true
 ): TValue | undefined {
-  const [value, setValue] = useState(val$ ? val$.get : void 0);
-  const [, setVersion] = useState(val$?.$version);
+  const subscriber = useCallback<Subscriber>(
+    onStoreChange => {
+      if (val$) return val$.subscribe(onStoreChange, eager);
+      return noop;
+    },
+    [val$, eager]
+  );
 
-  useEffect(() => {
-    if (val$) {
-      const versionSetter = () => val$.$version;
-      const updateValue = () => {
-        setVersion(versionSetter);
-        setValue(val$.get);
-      };
-      return val$.subscribe(updateValue, eager);
-    } else {
-      setVersion(void 0);
-      setValue(void 0);
-    }
-  }, [val$, eager]);
+  const valueGetter = val$ ? val$.get : noop;
+
+  const value = useSyncExternalStore(
+    subscriber,
+    valueGetter,
+    // It is safe to use the same value getter for server snapshot since val() can
+    // be initialized with a default value.
+    valueGetter
+  );
 
   useDebugValue(value);
 
