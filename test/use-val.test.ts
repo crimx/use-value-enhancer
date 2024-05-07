@@ -62,6 +62,16 @@ describe("useVal", () => {
       const { result: result2 } = renderHook(() => useVal(val$));
       expect(result2.current).toBe(1);
     });
+
+    it("val1$ -> val2$", () => {
+      const val1$ = val(1);
+      const { result: result1 } = renderHook(() => useVal(val1$));
+      expect(result1.current).toBe(1);
+
+      const val2$ = val(2);
+      const { result: result2 } = renderHook(() => useVal(val2$));
+      expect(result2.current).toBe(2);
+    });
   });
 
   it("should trigger re-render after reactive collections has changed", async () => {
