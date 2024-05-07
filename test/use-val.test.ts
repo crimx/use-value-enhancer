@@ -44,6 +44,26 @@ describe("useVal", () => {
     expect(result.current).not.toBe(fn);
   });
 
+  it("should get correct value after val$ changes", async () => {
+    it("val$ -> undefined", () => {
+      const val$ = val(1);
+      const { result: result1 } = renderHook(() => useVal(val$));
+      expect(result1.current).toBe(1);
+
+      const { result: result2 } = renderHook(() => useVal());
+      expect(result2.current).toBeUndefined();
+    });
+
+    it("undefined -> val$", () => {
+      const { result: result1 } = renderHook(() => useVal());
+      expect(result1.current).toBeUndefined;
+
+      const val$ = val(1);
+      const { result: result2 } = renderHook(() => useVal(val$));
+      expect(result2.current).toBe(1);
+    });
+  });
+
   it("should not trigger extra rendering on initial value", async () => {
     const val$ = val(1);
     let renderingCount = 0;

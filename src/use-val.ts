@@ -98,7 +98,6 @@ const useValWithUseSyncExternalStore: UseVal = <TValue>(
       ? () => [val$.get(), val$.$version]
       : noop;
 
-    let hasMemo = false;
     let memoizedSnapshot: ValueSnapshot<TValue> | undefined = void 0;
 
     const memoizedSelector = (
@@ -107,33 +106,15 @@ const useValWithUseSyncExternalStore: UseVal = <TValue>(
       if (nextSnapshot === void 0) {
         // The nextSnapshot can only be undefined if the $val is missing (valueGetter is noop)
         // let's clear internal memoized state and return undefined
-        hasMemo = false;
         memoizedSnapshot = void 0;
         return void 0;
-      }
-
-      if (!hasMemo) {
-        // The first time the hook is called, there is no memoized result.
-        // We can return the incoming value directly without any comparison.
-        hasMemo = true;
-        memoizedSnapshot = nextSnapshot;
-
-        /**
-         * TODO: if incoming $val itself has changed (from one reactive value to another),
-         * this useMemo instance will be re-created and all internally tracked memoized
-         * state will be lost.
-         *
-         * But if new $val and the previous $val has the same value and version,
-         * should we bail out re-render or not?
-         */
-
-        return nextSnapshot[0];
       }
 
       if (memoizedSnapshot === void 0) {
         /**
          * If the previous snapshot is undefined but next snapshot is not,
-         * it means that previously no $val is given, but now it is.
+         * it means that either this is the first time the hook is called,
+         * or previously no $val is given, but now it is.
          *
          * So we need to signal to React that the value has changed and a re-render
          * should be scheduled.
