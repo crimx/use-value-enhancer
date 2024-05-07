@@ -56,7 +56,7 @@ describe("useVal", () => {
 
     it("undefined -> val$", () => {
       const { result: result1 } = renderHook(() => useVal());
-      expect(result1.current).toBeUndefined;
+      expect(result1.current).toBeUndefined();
 
       const val$ = val(1);
       const { result: result2 } = renderHook(() => useVal(val$));
