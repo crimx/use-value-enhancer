@@ -47,6 +47,15 @@ type ValueSnapshot<TValue> = Readonly<[value: TValue, $version: any]>;
 
 const noop = () => void 0;
 
+// useValWithUseSyncExternalStore's implementation is heavily inspired by the
+// useSyncExternalStoreWithSelector from the React Team.
+//
+// https://github.com/facebook/react/blob/0fc9c84e63622026b5977557900c9cfe204552d3/packages/use-sync-external-store/src/useSyncExternalStoreWithSelector.js#L19
+//
+// Differences:
+// - we store [value, $version] instead of full store as snapshot
+// - we compare both value and $version instead of custom isEqual function
+// - we always use value instead of custom selector
 const useValWithUseSyncExternalStore: UseVal = <TValue>(
   val$?: ReadonlyVal<TValue>,
   eager = true
@@ -79,7 +88,8 @@ const useValWithUseSyncExternalStore: UseVal = <TValue>(
    * instance of the useMemo hook.
    *
    * Intentionally not using a useRef hook to track the previously rendered state,
-   * because the ref would be shared across all concurrent copies of the hook/component.
+   * because the ref would be shared across all concurrent copies of the hook/component,
+   * but the useMemo
    *
    * The same approach is also used by the React's official useSyncExternalStoreWithSelector
    */
