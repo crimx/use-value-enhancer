@@ -64,6 +64,27 @@ describe("useVal", () => {
     });
   });
 
+  it("should trigger re-render after reactive collections has changed", async () => {
+    const map$ = reactiveMap<string, number>();
+    map$.set("foo", 1);
+
+    const { result: result1 } = renderHook(() => {
+      const map = useVal(map$.$);
+      return map.get("foo");
+    });
+
+    expect(result1.current).toEqual(1);
+
+    await act(async () => map$.set("foo", 2));
+    const { result: result2 } = renderHook(() => {
+      const map = useVal(map$.$);
+      return map.get("foo");
+    });
+
+    expect(result2.current).toEqual(2);
+    map$.dispose();
+  });
+
   it("should not trigger extra rendering on initial value", async () => {
     const val$ = val(1);
     let renderingCount = 0;
