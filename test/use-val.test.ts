@@ -1,11 +1,28 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { derive, val, nextTick } from "value-enhancer";
-import { useVal } from "../src/index";
+import {
+  useVal,
+  useValWithUseEffect,
+  useValWithUseSyncExternalStore,
+} from "../src/index";
 import type { ReactiveMap } from "value-enhancer/collections";
 import { reactiveMap } from "value-enhancer/collections";
 
-describe("useVal", () => {
+describe.each([
+  {
+    name: "useVal",
+    useVal,
+  },
+  {
+    name: "useValWithUseEffect",
+    useVal: useValWithUseEffect,
+  },
+  {
+    name: "useValWithUseSyncExternalStore",
+    useVal: useValWithUseSyncExternalStore,
+  },
+])("useVal ($a)", ({ useVal }) => {
   it("should get value from val", () => {
     const val$ = val(1);
     const { result } = renderHook(() => useVal(val$));
@@ -42,6 +59,57 @@ describe("useVal", () => {
 
     expect(result.current).toBe(val$.value);
     expect(result.current).not.toBe(fn);
+  });
+
+  it("should get correct value after val$ changes", async () => {
+    it("val$ -> undefined", () => {
+      const val$ = val(1);
+      const { result: result1 } = renderHook(() => useVal(val$));
+      expect(result1.current).toBe(1);
+
+      const { result: result2 } = renderHook(() => useVal());
+      expect(result2.current).toBeUndefined();
+    });
+
+    it("undefined -> val$", () => {
+      const { result: result1 } = renderHook(() => useVal());
+      expect(result1.current).toBeUndefined();
+
+      const val$ = val(1);
+      const { result: result2 } = renderHook(() => useVal(val$));
+      expect(result2.current).toBe(1);
+    });
+
+    it("val1$ -> val2$", () => {
+      const val1$ = val(1);
+      const { result: result1 } = renderHook(() => useVal(val1$));
+      expect(result1.current).toBe(1);
+
+      const val2$ = val(2);
+      const { result: result2 } = renderHook(() => useVal(val2$));
+      expect(result2.current).toBe(2);
+    });
+  });
+
+  it("should trigger re-render after reactive collections has changed", async () => {
+    const map$ = reactiveMap<string, number>();
+    map$.set("foo", 1);
+
+    const { result: result1 } = renderHook(() => {
+      const map = useVal(map$.$);
+      return map.get("foo");
+    });
+
+    expect(result1.current).toEqual(1);
+
+    await act(async () => map$.set("foo", 2));
+    const { result: result2 } = renderHook(() => {
+      const map = useVal(map$.$);
+      return map.get("foo");
+    });
+
+    expect(result2.current).toEqual(2);
+    map$.dispose();
   });
 
   it("should not trigger extra rendering on initial value", async () => {
