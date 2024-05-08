@@ -1,11 +1,28 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { derive, val, nextTick } from "value-enhancer";
-import { useVal } from "../src/index";
+import {
+  useVal,
+  useValWithUseEffect,
+  useValWithUseSyncExternalStore,
+} from "../src/index";
 import type { ReactiveMap } from "value-enhancer/collections";
 import { reactiveMap } from "value-enhancer/collections";
 
-describe("useVal", () => {
+describe.each([
+  {
+    name: "useVal",
+    useVal,
+  },
+  {
+    name: "useValWithUseEffect",
+    useVal: useValWithUseEffect,
+  },
+  {
+    name: "useValWithUseSyncExternalStore",
+    useVal: useValWithUseSyncExternalStore,
+  },
+])("useVal ($a)", ({ useVal }) => {
   it("should get value from val", () => {
     const val$ = val(1);
     const { result } = renderHook(() => useVal(val$));
