@@ -1,7 +1,6 @@
 import { type ReadonlyVal } from "value-enhancer";
 
 import reactExports, {
-  useCallback,
   useDebugValue,
   useEffect,
   useMemo,
