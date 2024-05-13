@@ -190,7 +190,9 @@ describe.each([
 
     await nextTick();
 
-    expect(mockTransform).toHaveBeenCalledTimes(0);
+    expect(mockTransform).toHaveBeenCalledTimes(1);
+
+    mockTransform.mockClear();
 
     renderHook(() => useVal(derived$));
 
@@ -211,7 +213,7 @@ describe.each([
 
     await nextTick();
 
-    expect(mockTransform).toHaveBeenCalledTimes(1);
+    expect(mockTransform).toHaveBeenCalledTimes(0);
 
     derived$.dispose();
     map.dispose();
