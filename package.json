@@ -1,6 +1,6 @@
 {
   "name": "use-value-enhancer",
-  "version": "5.0.4",
+  "version": "5.0.5",
   "private": false,
   "description": "React hooks for value-enhancer.",
   "license": "MIT",

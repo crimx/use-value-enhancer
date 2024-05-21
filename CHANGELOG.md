@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.5](https://github.com/crimx/use-value-enhancer/compare/v5.0.4...v5.0.5) (2024-05-21)
+
+
+### Features
+
+* **useVal:** support useVal with non-val value ([13bda27](https://github.com/crimx/use-value-enhancer/commit/13bda271c9ba0a1a225eb07bf334f0bb423bafcf))
+
 ### [5.0.4](https://github.com/crimx/use-value-enhancer/compare/v5.0.2...v5.0.4) (2024-05-13)
 
 ### [5.0.3](https://github.com/crimx/use-value-enhancer/compare/v5.0.2...v5.0.3) (2024-05-13)
