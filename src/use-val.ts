@@ -1,4 +1,5 @@
-import { type ReadonlyVal } from "value-enhancer";
+import type { UnwrapVal } from "value-enhancer";
+import { isVal, type ReadonlyVal } from "value-enhancer";
 
 import reactExports, {
   useDebugValue,
@@ -30,6 +31,24 @@ interface UseVal {
   <TValue = any>(val$?: ReadonlyVal<TValue>, eager?: boolean):
     | TValue
     | undefined;
+
+  /**
+   * Returns the value if it is not a val.
+   *
+   * @param value A non-val value
+   * @param eager Trigger subscription callback synchronously. Default true.
+   * @returns the value
+   */
+  <TValue>(value: TValue, eager?: boolean): UnwrapVal<TValue>;
+
+  /**
+   * Returns the value if it is not a val.
+   *
+   * @param value A non-val value
+   * @param eager Trigger subscription callback synchronously. Default true.
+   * @returns the value
+   */
+  <TValue>(value?: TValue, eager?: boolean): UnwrapVal<TValue> | undefined;
 }
 
 // Utility types and functions for useValWithUseSyncExternalStore
@@ -39,16 +58,24 @@ interface UseVal {
  */
 type Subscriber = Parameters<(typeof reactExports)["useSyncExternalStore"]>[0];
 
+const noop = () => {
+  /* noop */
+};
+
+const noopSubscriber: Subscriber = () => noop;
+
 export const useValWithUseSyncExternalStore: UseVal = <TValue>(
-  val$?: ReadonlyVal<TValue>,
+  val$?: TValue,
   eager = true
-): TValue | undefined => {
+): UnwrapVal<TValue> | undefined => {
   const [subscriber, getSnapshot] = useMemo(
     () =>
-      [
-        (onStoreChange => val$?.subscribe(onStoreChange, eager)) as Subscriber,
-        () => val$?.$version,
-      ] as const,
+      isVal(val$)
+        ? ([
+            (onChange: () => void) => val$.subscribe(onChange, eager),
+            () => val$.$version,
+          ] as const)
+        : ([noopSubscriber, noop] as const),
     [val$, eager]
   );
 
@@ -60,31 +87,29 @@ export const useValWithUseSyncExternalStore: UseVal = <TValue>(
     getSnapshot
   );
 
-  useDebugValue(val$?.value);
+  const value = isVal(val$) ? val$.get() : val$;
 
-  return val$?.value;
+  useDebugValue(value);
+
+  return value;
 };
 
 export const useValWithUseEffect: UseVal = <TValue>(
-  val$?: ReadonlyVal<TValue>,
+  val$?: TValue,
   eager = true
-): TValue | undefined => {
-  const [value, setValue] = useState(val$ ? val$.get : void 0);
-  const [, setVersion] = useState(val$?.$version);
+): UnwrapVal<TValue> | undefined => {
+  const [, setVersion] = useState(() => (isVal(val$) ? val$.$version : val$));
 
   useEffect(() => {
-    if (val$) {
+    if (isVal(val$)) {
       const versionSetter = () => val$.$version;
-      const updateValue = () => {
-        setVersion(versionSetter);
-        setValue(val$.get);
-      };
-      return val$.subscribe(updateValue, eager);
-    } else {
-      setVersion(void 0);
-      setValue(void 0);
+      return val$.subscribe(() => setVersion(versionSetter), eager);
     }
+
+    setVersion(noop);
   }, [val$, eager]);
+
+  const value = isVal(val$) ? val$.get() : val$;
 
   useDebugValue(value);
 

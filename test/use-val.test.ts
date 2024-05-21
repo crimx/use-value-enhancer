@@ -1,5 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
+import type { ReadonlyVal } from "value-enhancer";
 import { derive, val, nextTick } from "value-enhancer";
 import {
   useVal,
@@ -22,7 +23,7 @@ describe.each([
     name: "useValWithUseSyncExternalStore",
     useVal: useValWithUseSyncExternalStore,
   },
-])("useVal ($a)", ({ useVal }) => {
+])("useVal ($name)", ({ useVal }) => {
   it("should get value from val", () => {
     const val$ = val(1);
     const { result } = renderHook(() => useVal(val$));
@@ -34,6 +35,40 @@ describe.each([
     const { result } = renderHook(() => useVal());
 
     expect(result.current).toBeUndefined();
+  });
+
+  it("should return the value if it is not a val", () => {
+    const { result, unmount } = renderHook(() => useVal(1));
+
+    expect(result.current).toBe(1);
+
+    unmount();
+  });
+
+  it("should support switching between value and val", () => {
+    const { result, rerender } = renderHook(({ count }) => useVal(count), {
+      initialProps: { count: 1 } as { count: number | ReadonlyVal<number> },
+    });
+
+    expect(result.current).toBe(1);
+
+    const v$ = val(2);
+
+    rerender({ count: v$ });
+
+    expect(result.current).toBe(2);
+
+    act(() => v$.set(3));
+
+    expect(result.current).toBe(3);
+
+    rerender({ count: 4 });
+
+    expect(result.current).toBe(4);
+
+    rerender({ count: 5 });
+
+    expect(result.current).toBe(5);
   });
 
   it("should update after value changes", async () => {
