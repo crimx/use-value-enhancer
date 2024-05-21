@@ -27,7 +27,7 @@ npm add use-value-enhancer value-enhancer react
 
 `useVal` accepts a val from anywhere and returns the latest value.
 
-It only triggers re-rendering when new value emitted from val (base on val ` equal`` not  `Object.is`comparison from React`useState`).
+It triggers re-rendering when new value emitted from val (base on val `$version` instead of React's `Object.is` comparison).
 
 ```tsx
 import { val } from "value-enhancer";
@@ -45,7 +45,7 @@ function Component({ val$ }) {
 
 `useDerived` accepts a val from anywhere and returns the latest derived value.
 
-Re-rendering is triggered when the derived value changes (`Object.is` comparison from React `useState`).
+Re-rendering is triggered when the derived value changes.
 
 ```tsx
 import { val } from "value-enhancer";
@@ -63,7 +63,7 @@ function Component({ val$ }) {
 
 `useFlatten` accepts a val from anywhere and returns the latest value from the flatten val.
 
-Re-rendering is triggered when the flatten value changes (`Object.is` comparison from React `useState`).
+Re-rendering is triggered when the flatten value changes.
 
 ```tsx
 import { val } from "value-enhancer";
@@ -93,7 +93,7 @@ function Component({ map }) {
 
 ### useKeys
 
-`useKeys` accepts a reactive collection and returns the latest keys as array.
+`useKeys` accepts a reactive collection and returns the latest `keys()` as array.
 
 ```tsx
 import { reactiveMap } from "value-enhancer/collections";
@@ -109,7 +109,7 @@ function Component({ map }) {
 
 ### useValues
 
-`useValues` accepts a reactive collection and returns the latest values as array.
+`useValues` accepts a reactive collection and returns the latest `values()` as array.
 
 ```tsx
 import { reactiveSet } from "value-enhancer/collections";
