@@ -4,7 +4,7 @@ import { identity } from "value-enhancer";
 import { useVal } from "../use-val";
 import { useIsomorphicLayoutEffect } from "../utils";
 
-export function useTransformValInternal<
+export const useTransformValInternal = <
   TSrcValue = any,
   TGetResult = any,
   TTarget = any
@@ -17,7 +17,7 @@ export function useTransformValInternal<
   val$?: ReadonlyVal<TSrcValue>,
   get = identity as (value: TSrcValue) => TGetResult,
   eagerOrConfig: boolean | ValConfig<TTarget> = true
-): TTarget | undefined {
+): TTarget | undefined => {
   let equal: ValConfig<TTarget>["equal"];
   let eager: ValConfig<TTarget>["eager"];
 
@@ -52,4 +52,4 @@ export function useTransformValInternal<
   useDebugValue(value);
 
   return value;
-}
+};
