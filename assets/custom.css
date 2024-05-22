@@ -6,11 +6,11 @@
   margin-top: 40px;
 }
 
-.tsd-signatures > .tsd-signature {
-  background: var(--code-background);
-  border: none;
-  border-radius: 5px;
-  padding-left: 10px;
+.tsd-signature {
+  background: var(--code-background) !important;
+  border: none !important;
+  border-radius: 5px !important;
+  padding-left: 10px !important;
 }
 
 .tsd-hierarchy {
