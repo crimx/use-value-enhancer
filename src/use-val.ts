@@ -8,11 +8,10 @@ import reactExports, {
   useState,
 } from "react";
 
-// Function overload with TypeScript interface
 interface UseVal {
   /**
    * Accepts a val from anywhere and returns the latest value.
-   * It only triggers re-rendering when new value emitted from val (base on val `equal` not `Object.is` comparison from React `useState`).
+   * It only triggers re-rendering when new value emitted from val (base on val `$version` instead of React's `Object.is` comparison).
    *
    * @param val$ A val of value
    * @param eager Trigger subscription callback synchronously. Default true.
@@ -22,7 +21,7 @@ interface UseVal {
 
   /**
    * Accepts a val from anywhere and returns the latest value.
-   * It only triggers re-rendering when new value emitted from val (base on val `equal` not `Object.is` comparison from React `useState`).
+   * It only triggers re-rendering when new value emitted from val (base on val `$version` instead of React's `Object.is` comparison).
    *
    * @param val$ A val of value
    * @param eager Trigger subscription callback synchronously. Default true.
@@ -51,18 +50,11 @@ interface UseVal {
   <TValue>(value?: TValue, eager?: boolean): UnwrapVal<TValue> | undefined;
 }
 
-// Utility types and functions for useValWithUseSyncExternalStore
-
-/**
- * The subscriber function that is passed to useSyncExternalStore hook.
- */
-type Subscriber = Parameters<(typeof reactExports)["useSyncExternalStore"]>[0];
-
 const noop = () => {
   /* noop */
 };
 
-const noopSubscriber: Subscriber = () => noop;
+const returnsNoop = () => noop;
 
 export const useValWithUseSyncExternalStore: UseVal = <TValue>(
   val$?: TValue,
@@ -75,7 +67,11 @@ export const useValWithUseSyncExternalStore: UseVal = <TValue>(
             (onChange: () => void) => val$.subscribe(onChange, eager),
             () => val$.$version,
           ] as const)
-        : ([noopSubscriber, noop] as const),
+        : ([
+            returnsNoop,
+            // reuse noop as unique value
+            returnsNoop,
+          ] as const),
     [val$, eager]
   );
 
@@ -98,7 +94,7 @@ export const useValWithUseEffect: UseVal = <TValue>(
   val$?: TValue,
   eager = true
 ): UnwrapVal<TValue> | undefined => {
-  const [, setVersion] = useState(() => (isVal(val$) ? val$.$version : val$));
+  const [, setVersion] = useState(() => (isVal(val$) ? val$.$version : noop));
 
   useEffect(() => {
     if (isVal(val$)) {
@@ -106,7 +102,8 @@ export const useValWithUseEffect: UseVal = <TValue>(
       return val$.subscribe(() => setVersion(versionSetter), eager);
     }
 
-    setVersion(noop);
+    // reuse noop as unique value
+    setVersion(returnsNoop);
   }, [val$, eager]);
 
   const value = isVal(val$) ? val$.get() : val$;

@@ -71,6 +71,33 @@ describe.each([
     expect(result.current).toBe(5);
   });
 
+  it("should render only once on props value changes", () => {
+    const spyRender = vi.fn();
+
+    const { result, rerender } = renderHook(
+      ({ count }) => {
+        spyRender();
+        return useVal(count);
+      },
+      {
+        initialProps: { count: 1 } as { count: number | ReadonlyVal<number> },
+      }
+    );
+
+    expect(result.current).toBe(1);
+    expect(spyRender).toHaveBeenCalledTimes(1);
+
+    rerender({ count: 2 });
+
+    expect(result.current).toBe(2);
+    expect(spyRender).toHaveBeenCalledTimes(2);
+
+    rerender({ count: 2 });
+
+    expect(result.current).toBe(2);
+    expect(spyRender).toHaveBeenCalledTimes(3);
+  });
+
   it("should update after value changes", async () => {
     const val$ = val("a");
     const { result } = renderHook(() => useVal(val$));
