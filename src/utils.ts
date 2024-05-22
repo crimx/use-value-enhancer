@@ -4,22 +4,14 @@ import { useEffect, useLayoutEffect } from "react";
 export const useIsomorphicLayoutEffect = /* @__PURE__ */ (() =>
   typeof document !== "undefined" ? useLayoutEffect : useEffect)();
 
-export type ColWithKeys<TKey> = { keys(): Iterable<TKey> };
-
-export const getKeys = <TKey>(col: ColWithKeys<TKey>): TKey[] => [
+export const getKeys = <TKey>(col: { keys(): Iterable<TKey> }): TKey[] => [
   ...col.keys(),
 ];
 
-export type ColWithValues<TValue> = { values(): Iterable<TValue> };
+export const getValues = <TValue>(col: {
+  values(): Iterable<TValue>;
+}): TValue[] => [...col.values()];
 
-export const getValues = <TValue>(col: ColWithValues<TValue>): TValue[] => [
-  ...col.values(),
-];
-
-export type ColWithEntries<TKey, TValue> = {
+export const getEntries = <TKey, TValue>(col: {
   entries(): Iterable<[TKey, TValue]>;
-};
-
-export const getEntries = <TKey, TValue>(
-  col: ColWithEntries<TKey, TValue>
-): [TKey, TValue][] => [...col.entries()];
+}): [TKey, TValue][] => [...col.entries()];

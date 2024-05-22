@@ -1,0 +1,13 @@
+.tsd-description {
+  margin-bottom: 60px;
+}
+
+.tsd-hierarchy {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  .tsd-index-group {
+    display: none;
+  }
+}
