@@ -56,6 +56,10 @@ const noop = () => {
 
 const returnsNoop = () => noop;
 
+/**
+ * @internal
+ * @ignore
+ */
 export const useValWithUseSyncExternalStore: UseVal = <TValue>(
   val$?: TValue,
   eager = true
@@ -90,6 +94,10 @@ export const useValWithUseSyncExternalStore: UseVal = <TValue>(
   return value;
 };
 
+/**
+ * @internal
+ * @ignore
+ */
 export const useValWithUseEffect: UseVal = <TValue>(
   val$?: TValue,
   eager = true

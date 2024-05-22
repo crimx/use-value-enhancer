@@ -1,5 +1,16 @@
-.tsd-description {
-  margin-bottom: 60px;
+.tsd-panel:not(.tsd-member) > .tsd-signatures > .tsd-signature {
+  margin-top: 4rem;
+}
+
+.tsd-panel:not(.tsd-member) > .tsd-signatures > .tsd-signature:first-of-type {
+  margin-top: 2rem;
+}
+
+.tsd-signature {
+  background: var(--code-background) !important;
+  border: none !important;
+  border-radius: 5px !important;
+  padding-left: 10px !important;
 }
 
 .tsd-hierarchy {
