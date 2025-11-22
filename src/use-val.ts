@@ -1,5 +1,5 @@
 import type { UnwrapVal } from "value-enhancer";
-import { isVal, type ReadonlyVal } from "value-enhancer";
+import { type ReadonlyVal } from "value-enhancer";
 
 import reactExports, {
   useDebugValue,
@@ -7,6 +7,7 @@ import reactExports, {
   useMemo,
   useState,
 } from "react";
+import { getVal } from "./utils";
 
 interface UseVal {
   /**
@@ -56,30 +57,31 @@ const noop = () => {
 
 const returnsNoop = () => noop;
 
+const defaultArgs = [returnsNoop, returnsNoop as () => any] as const;
+
 /**
  * @internal
  * @ignore
  */
 export const useValWithUseSyncExternalStore: UseVal = <TValue>(
-  val$?: TValue,
+  v?: TValue,
   eager = true
 ): UnwrapVal<TValue> | undefined => {
-  const [subscriber, getSnapshot] = useMemo(
-    () =>
-      isVal(val$)
-        ? ([
-            (onChange: () => void) => val$.subscribe(onChange, eager),
-            () => val$.$version,
-          ] as const)
-        : ([
-            returnsNoop,
-            // reuse noop as unique value
-            returnsNoop,
-          ] as const),
-    [val$, eager]
-  );
+  const args = useMemo(() => {
+    const v$ = getVal(v);
+    return (
+      v$ &&
+      ([
+        (onChange: () => void) => v$.subscribe(onChange, eager),
+        () => v$.$version,
+        v$,
+      ] as const)
+    );
+  }, [v, eager]);
 
-  reactExports.useSyncExternalStore(
+  const [subscriber, getSnapshot, v$] = args ?? defaultArgs;
+
+  const version = reactExports.useSyncExternalStore(
     subscriber,
     getSnapshot,
     // It is safe to use the same value getter for server snapshot since val() can
@@ -87,7 +89,7 @@ export const useValWithUseSyncExternalStore: UseVal = <TValue>(
     getSnapshot
   );
 
-  const value = isVal(val$) ? val$.get() : val$;
+  const value = useMemo(() => (v$ ? v$.get() : v), [version, v$, v]);
 
   useDebugValue(value);
 
@@ -99,22 +101,20 @@ export const useValWithUseSyncExternalStore: UseVal = <TValue>(
  * @ignore
  */
 export const useValWithUseEffect: UseVal = <TValue>(
-  val$?: TValue,
+  v?: TValue,
   eager = true
 ): UnwrapVal<TValue> | undefined => {
-  const [, setVersion] = useState(() => (isVal(val$) ? val$.$version : noop));
+  const v$ = useMemo(() => getVal(v), [v]);
+  const [version, setVersion] = useState(() => v$?.$version);
 
   useEffect(() => {
-    if (isVal(val$)) {
-      const versionSetter = () => val$.$version;
-      return val$.subscribe(() => setVersion(versionSetter), eager);
+    if (v$) {
+      const versionSetter = () => v$.$version;
+      return v$.subscribe(() => setVersion(versionSetter), eager);
     }
+  }, [v$, eager]);
 
-    // reuse noop as unique value
-    setVersion(returnsNoop);
-  }, [val$, eager]);
-
-  const value = isVal(val$) ? val$.get() : val$;
+  const value = useMemo(() => (v$ ? v$.get() : v), [version, v$, v]);
 
   useDebugValue(value);
 

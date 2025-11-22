@@ -31,6 +31,22 @@ describe.each([
     expect(result.current).toBe(1);
   });
 
+  it("should get value from collection", () => {
+    const map$ = reactiveMap<string, number>();
+    map$.set("foo", 1);
+
+    const { result } = renderHook(() => {
+      const map = useVal(map$);
+      return map.get("foo");
+    });
+
+    expect(result.current).toBe(1);
+
+    act(() => map$.set("foo", 2));
+
+    expect(result.current).toBe(2);
+  });
+
   it("should return undefined if no val provided", () => {
     const { result } = renderHook(() => useVal());
 
